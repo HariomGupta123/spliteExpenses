@@ -1,18 +1,21 @@
 "use client"
 import React, { useCallback, useState } from 'react'
 import Input from './Input'
-import { FieldValues, useForm } from 'react-hook-form'
+import axios from 'axios'
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import Button from './Button/Button'
 import { BsGithub, BsGoogle } from 'react-icons/bs'
 import AuthSocialButton from './Button/AuthSocialButton'
-type Variant= "LOGIN" | "REGISTER"
+import { signIn } from 'next-auth/react'
+import toast from 'react-hot-toast'
+type Variant = "LOGIN" | "REGISTER"
 const AuthForm = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<FieldValues>({
-    defaultValues: { email: "", name: "", password: "" }
+    defaultValues: { name: "", email: "", password: "" }
   });
-  
+
   const [isLoading, setLoading] = useState(false);
-  const [variant,setVariant]=useState<Variant>('LOGIN')
+  const [variant, setVariant] = useState<Variant>('LOGIN')
   const toggleVariant = useCallback(() => {
     if (variant == "LOGIN") {
       setVariant('REGISTER')
@@ -20,21 +23,46 @@ const AuthForm = () => {
       setVariant('LOGIN')
     }
   }, [variant]);
-  const submit = () => {
+  const onSubmit:SubmitHandler<FieldValues> = (data) => {
     setLoading(true)
+    if(variant == "REGISTER"){
+      axios.post('/api/register',data)
+       .then(()=>signIn("credentials",data))
+       .then()
+       .catch(()=>toast("something went wrong"))
+       .finally(()=>setLoading(false))
+    }
+    if (variant == 'LOGIN') {
+      //
+      signIn('credentials', {
+        ...data,
+        redirect: false
+      }).then((callback) => {
+        if (callback?.error) {
+          toast.error('Invalid creadentialss')
+        };
+
+        if (callback?.ok && !callback?.error) {
+          toast.success('Logged in!')
+         
+        };
+      })
+        .finally(() => setLoading(false));
+
+    }
   }
   return (
     <div className='pt-5 sm:mx-auto ms:w-full ms:max-w-md w-[400px]'>
       <div className='bg-white px-4  py-8 shadow sm:rounded-lg sm:px-10'>
-        <form className='space-y-6' onSubmit={handleSubmit(submit)}>
+        <form className='space-y-6' onSubmit={handleSubmit(onSubmit)}>
           {variant == "REGISTER" && <Input id='name' label='Name' disabled={isLoading} register={register} errors={errors} />
-}
-          <Input id='email' label='Enter Email' disabled={isLoading} register={register} errors={errors} />
-          <Input id='password' label='Enter Password' disabled={isLoading} register={register} errors={errors} />
-                 <Button type={'submit'} disabled={isLoading} >
+          }
+          <Input id='email' label='Email' disabled={isLoading} register={register} errors={errors} />
+          <Input id='password' label='Password' disabled={isLoading} register={register} errors={errors} />
+          <Button type={'submit'} disabled={isLoading} >
 
-                  {variant=="LOGIN" ?"log in" :"register"}
-                 </Button>
+            {variant == "LOGIN" ? "log in" : "register"}
+          </Button>
         </form>
 
       </div>
@@ -46,22 +74,29 @@ const AuthForm = () => {
                         flex
                          items-center
                         '>
-            <div
-              className='w-full
+            <div className='w-full
                             border-t
                             border-gray-300'/>
-
-
           </div>
-          <div className='relative flex justify-center text-sm'>
-            <span className='bg-white px-2 text-gray-500'>
+          <div className='
+                        relative 
+                        flex 
+                        justify-center
+                         text-sm'>
+            <span className='
+            bg-white
+             px-2
+            text-gray-500'>
               Or continue with
             </span>
           </div>
 
 
         </div>
-        <div className='mt-6 flex gap-2'>
+        <div className='
+                     mt-6 
+                     flex 
+                     gap-2'>
           <AuthSocialButton
             icon={BsGithub}
             onClick={() => ";om"}
@@ -70,20 +105,17 @@ const AuthForm = () => {
             icon={BsGoogle}
             onClick={() => "hari"}
           />
-
-
-
         </div>
 
 
       </div>
       <div
         onClick={toggleVariant}
-        className='underline cursor-pointer'>
+        className='
+                  underline 
+                  cursor-pointer'>
         {variant == 'LOGIN' ? 'Create an account' : 'Login'}
-
       </div>
-
     </div>
   )
 }

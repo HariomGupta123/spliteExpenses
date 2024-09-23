@@ -1,15 +1,18 @@
+// src/libs/auth.ts
+
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { AuthOptions } from "next-auth";
+import prisma from "./prismadb";
 import GithubProvider from "next-auth/providers/github";
-import prisma from "./prismadb"
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { NextResponse } from "next/server";
- export const authOptions:AuthOptions={
-    adapter:PrismaAdapter(prisma),
-    providers:[
+import bcrypt from "bcrypt";
+
+export const authOptions: AuthOptions = {
+    adapter: PrismaAdapter(prisma),
+    providers: [
         GithubProvider({
-            clientId:process.env.GITHUB_ID as string,
+            clientId: process.env.GITHUB_ID as string,
             clientSecret: process.env.GITHUB_SECRET as string,
         }),
         GoogleProvider({
@@ -17,37 +20,42 @@ import { NextResponse } from "next/server";
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         }),
         CredentialsProvider({
-            name:"credentials",
-            credentials:{
-                email:{label:"email",type:"text"},
-                password:{label:"password", type:"password"}
+            name: "credentials",
+            credentials: {
+                email: { label: "email", type: "text" },
+                password: { label: "password", type: "password" },
             },
-           async  authorize(credentials) {
-            if(!credentials?.email || !credentials?.password){
-                throw new NextResponse("Invalid credentials")
-            }
-            const user=await prisma.user.findUnique({
-                where:{
-                    email:credentials.email
-                }
-            })
-           if (!user || !user?.hashedPassword) {
+            async authorize(credentials) {
+                if (!credentials?.email || !credentials?.password) {
+                    console.log("Missing credentials");
                     throw new Error("Invalid credentials");
                 }
-                const isCorrectPassword = await bcrypt.compare(
-                    credentials.password,
-                    user.hashedPassword
-                );
+
+                const user = await prisma.user.findUnique({
+                    where: { email: credentials.email },
+                });
+                // console.log("Fetched user:", user);
+
+                if (!user || !user?.hashedPassword) {
+                    console.log("No user or missing hashedPassword");
+                    throw new Error("Invalid credentials");
+                }
+
+                const isCorrectPassword = await bcrypt.compare(credentials.password, user.hashedPassword);
+                console.log("Password comparison result:", isCorrectPassword);
+
                 if (!isCorrectPassword) {
                     throw new Error("Invalid credentials");
                 }
+
                 return user;
             }
-        })
+
+        }),
     ],
-     debug: process.env.NODE_ENV !== "production",
+    debug: process.env.NODE_ENV !== "production",
     session: {
         strategy: "jwt",
     },
     secret: process.env.NEXTAUTH_SECRET,
- }
+};

@@ -13,11 +13,67 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model User{
-  id String  @id @default(auto()) @map("_id") @db.ObjectId
-  name String?
-  password String
-  email String @unique
-  createdDateAt DateTime? @default(now())
+   id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  name           String?
+  email          String    @unique
+  emailVerified  DateTime?
+  image          String?
   hashedPassword String?
-  updated DateTime @updatedAt
+  createdAt      DateTime  @default(now())
+  updated        DateTime  @updatedAt
+ // The expenses created by this user
+  expenses      Expense[]    @relation("ExpenseCreator")
+  
+  // The expenses this user paid for
+  expensesPaid  Expense[]    @relation("ExpensePayer")
+  
+  groups        GroupMember[]
+  expenseSplits ExpenseSplit[]
+}
+
+model Group {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  createdAt   DateTime     @default(now())
+  members     GroupMember[]
+  expenses    Expense[]
+}
+
+model GroupMember {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  user        User         @relation(fields: [userId], references: [id])
+  userId      String       @db.ObjectId
+  group       Group        @relation(fields: [groupId], references: [id])
+  groupId     String       @db.ObjectId
+  joinedAt    DateTime     @default(now())
+
+  @@unique([userId, groupId]) // Ensures a user can only join a group once
+}
+
+model Expense {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  description   String
+  amount        Float
+  createdAt     DateTime     @default(now())
+  
+  // The user who added the expense (could be adding for someone else)
+  createdBy     User         @relation("ExpenseCreator", fields: [createdById], references: [id])
+  createdById   String       @db.ObjectId
+  
+  // The user who actually paid the expense
+  paidBy        User         @relation("ExpensePayer", fields: [paidById], references: [id])
+  paidById      String       @db.ObjectId
+  
+  group         Group        @relation(fields: [groupId], references: [id])
+  groupId       String       @db.ObjectId
+  splits        ExpenseSplit[]
+}
+
+model ExpenseSplit {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  user        User         @relation(fields: [userId], references: [id])
+  userId      String       @db.ObjectId
+  expense     Expense      @relation(fields: [expenseId], references: [id])
+  expenseId   String       @db.ObjectId
+  amount      Float        // The portion of the total expense this user needs to pay
 }
