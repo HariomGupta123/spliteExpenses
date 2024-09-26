@@ -8,8 +8,10 @@ import { BsGithub, BsGoogle } from 'react-icons/bs'
 import AuthSocialButton from './Button/AuthSocialButton'
 import { signIn } from 'next-auth/react'
 import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 type Variant = "LOGIN" | "REGISTER"
 const AuthForm = () => {
+  const route=useRouter()
   const { register, handleSubmit, formState: { errors } } = useForm<FieldValues>({
     defaultValues: { name: "", email: "", password: "" }
   });
@@ -44,7 +46,7 @@ const AuthForm = () => {
 
         if (callback?.ok && !callback?.error) {
           toast.success('Logged in!')
-         
+          route.push("/users")
         };
       })
         .finally(() => setLoading(false));

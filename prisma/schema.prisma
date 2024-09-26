@@ -29,14 +29,20 @@ model User{
   
   groups        GroupMember[]
   expenseSplits ExpenseSplit[]
+  groupId       String[]  @db.ObjectId
+  group         Group[]   @relation(fields: [groupId],references: [id])
 }
 
 model Group {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
+  isGroup     Boolean?
+  name        String?
   createdAt   DateTime     @default(now())
+  userIds     String[]  @db.ObjectId
+  users       User[]   @relation(fields:[userIds], references:[id])
+
   members     GroupMember[]
-  expenses    Expense[]
+  expenses    Expense[] 
 }
 
 model GroupMember {

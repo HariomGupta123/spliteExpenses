@@ -1,9 +1,10 @@
 import React from 'react'
 
-const users = () => {
+
+const users =async () => {
   return (
     <div>
-      hello users
+  hi
     </div>
   )
 }
