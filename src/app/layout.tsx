@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 // import localFont from "next/font/local";
 import "./globals.css";
 import ContextsToaster from "./contexts/ContextsToaster";
+import AuthContext from "./contexts/authContext";
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -26,10 +27,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body   
+      <body
       >
-        <ContextsToaster/>
-        {children}
+        <AuthContext>
+          <ContextsToaster />
+          {children}
+        </AuthContext>
       </body>
     </html>
   );

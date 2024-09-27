@@ -3,9 +3,7 @@ import bcrypt from "bcrypt"
 import prisma from "../../lib/prismadb"
 
 export async function  POST(request: Request){
-    try {
-        
-    
+    try { 
     const body= await request.json()
     const {email,name,password}=body
     if(!email || !name || !password){
