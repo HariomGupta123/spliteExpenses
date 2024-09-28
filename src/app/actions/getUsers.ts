@@ -2,10 +2,10 @@ import prisma from "../lib/prismadb";
 import getCurrentUser from "./getCurrentUser";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export async function getUsers(req: NextApiRequest, res: NextApiResponse) {
+export async function getUsers() {
     try {
         // Pass req and res to getCurrentUser for session retrieval
-        const session = await getCurrentUser(req, res);
+        const session = await getCurrentUser();
         
         if (!session?.email) {
             return [];

@@ -31,29 +31,34 @@ model User {
   
   // The expenses this user paid for
   expensesPaid  Expense[]    @relation("ExpensePayer")
-  
-  groups        GroupMember[]
+  groups       Group[]       @relation(fields: [groupIds],references: [id])
+    groupIds    String[]     @db.ObjectId
+
+  // groups        GroupMember[]
   expenseSplits ExpenseSplit[]
 }
 
 model Group {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   name        String
+  isGroup    Boolean?
+  users      User[]       @relation(fields: [userIds],references: [id])
+  userIds    String[]     @db.ObjectId
   createdAt   DateTime     @default(now())
-  members     GroupMember[]
+  // members     GroupMember[]
   expenses    Expense[]
 }
 
-model GroupMember {
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  user        User         @relation(fields: [userId], references: [id])
-  userId      String       @db.ObjectId
-  group       Group        @relation(fields: [groupId], references: [id])
-  groupId     String       @db.ObjectId
-  joinedAt    DateTime     @default(now())
+// model GroupMember {
+//   id          String       @id @default(auto()) @map("_id") @db.ObjectId
+//   user        User         @relation(fields: [userId], references: [id])
+//   userId      String       @db.ObjectId
+//   // group       Group        @relation(fields: [groupId], references: [id])
+//   // groupId     String       @db.ObjectId
+//   joinedAt    DateTime     @default(now())
 
-  @@unique([userId, groupId]) // Ensures a user can only join a group once
-}
+//   // @@unique([userId, groupId]) // Ensures a user can only join a group once
+// }
 
 model Expense {
   id            String       @id @default(auto()) @map("_id") @db.ObjectId
@@ -63,12 +68,10 @@ model Expense {
   
   // The user who added the expense (could be adding for someone else)
   createdBy     User         @relation("ExpenseCreator", fields: [createdById], references: [id])
-  createdById   String       @db.ObjectId
-  
+  createdById   String       @db.ObjectId 
   // The user who actually paid the expense
   paidBy        User         @relation("ExpensePayer", fields: [paidById], references: [id])
   paidById      String       @db.ObjectId
-  
   group         Group        @relation(fields: [groupId], references: [id])
   groupId       String       @db.ObjectId
   splits        ExpenseSplit[]
