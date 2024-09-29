@@ -16,22 +16,32 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const {isGroup, name, members } = body;
+    const {groupName,memberEmail } = body;
 
     // Validate the group creation request
-    if (!isGroup &&!members || members.length < 2 || !name) {
+    if (!groupName && !memberEmail || memberEmail.length < 2 ) {
       return new NextResponse("members must be more than one", { status: 400 });
     }
+     const members=await prisma.user.findMany({
+      where:{
+        email:{
+          in:memberEmail
+        }
+      }
+     })
 
+     if(members.length !==memberEmail.length){
+      return new NextResponse("some email is invalide",{status: 400})
+     }
     // Create a new group with the mapped member IDs
   
             const newGroup = await prisma.group.create({
                 data: {
-                    isGroup,
-                    name,
+                    isGroup:true,
+                    name:groupName,
                     users: {
-                        connect: [...members.map((member: { value: string }) => ({ id: member.value })),
-                        ]
+                        connect: members.map((member) => ({ id: member.id})),
+                        
                     }
                 },
                 include: {
