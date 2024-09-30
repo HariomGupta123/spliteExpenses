@@ -30,12 +30,14 @@ model User {
   expenses      Expense[]    @relation("ExpenseCreator")
   
   // The expenses this user paid for
-  expensesPaid  Expense[]    @relation("ExpensePayer")
+  expensesPaid  Expense[]    @relation("ExpensePayer",fields: [expensesPaidId],references: [id])
+  expensesPaidId String[]     @db.ObjectId
   groups       Group[]       @relation(fields: [groupIds],references: [id])
-    groupIds    String[]     @db.ObjectId
+   groupIds    String[]     @db.ObjectId
 
   // groups        GroupMember[]
   expenseSplits ExpenseSplit[]
+  amountHerfer givetakeamount[]
 }
 
 model Group {
@@ -65,13 +67,14 @@ model Expense {
   description   String
   amount        Float
   createdAt     DateTime     @default(now())
-  
+   equalSplite Boolean?
+  unEqualSplite Boolean?
   // The user who added the expense (could be adding for someone else)
   createdBy     User         @relation("ExpenseCreator", fields: [createdById], references: [id])
   createdById   String       @db.ObjectId 
   // The user who actually paid the expense
-  paidBy        User         @relation("ExpensePayer", fields: [paidById], references: [id])
-  paidById      String       @db.ObjectId
+  paidBy        User[]         @relation("ExpensePayer", fields: [paidByIds], references: [id])
+  paidByIds      String[]       @db.ObjectId
   group         Group        @relation(fields: [groupId], references: [id])
   groupId       String       @db.ObjectId
   splits        ExpenseSplit[]
@@ -79,11 +82,19 @@ model Expense {
 
 model ExpenseSplit {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  equalSplite Boolean?
-  unEqualSplite Boolean?
+ 
   user        User         @relation(fields: [userId], references: [id])
   userId      String       @db.ObjectId
   expense     Expense      @relation(fields: [expenseId], references: [id])
   expenseId   String       @db.ObjectId
   amount      Float        // The portion of the total expense this user needs to pay
+  returnBackAmout Float?
+}
+model givetakeamount{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  user    User @relation(fields: [userId],references: [id])
+  userId  String @db.ObjectId
+  paidAmount Float?
+  takeAmount Float?
+  giveAount Float?
 }
