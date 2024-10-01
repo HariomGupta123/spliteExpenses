@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,68 +7,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-// prisma/schema.prisma
-
 model User {
-  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
   name           String?
-  email          String    @unique
+  email          String         @unique
   emailVerified  DateTime?
   image          String?
   hashedPassword String?
-  createdAt      DateTime  @default(now())
-  updated        DateTime  @updatedAt
+  createdAt      DateTime       @default(now())
+  updated        DateTime       @updatedAt
   
   // The expenses created by this user
-  expenses      Expense[]    @relation("ExpenseCreator")
+  expenses       Expense[]      @relation("ExpenseCreator")
   
   // The expenses this user paid for
-  expensesPaid  Expense[]    @relation("ExpensePayer",fields: [expensesPaidId],references: [id])
-  expensesPaidId String[]     @db.ObjectId
-  groups       Group[]       @relation(fields: [groupIds],references: [id])
-   groupIds    String[]     @db.ObjectId
-
-  // groups        GroupMember[]
-  expenseSplits ExpenseSplit[]
-  amountHerfer givetakeamount[]
+  expensesPaid   Expense[]      @relation("ExpensePayer", fields: [expensesPaidId], references: [id])
+  expensesPaidId String[]       @db.ObjectId
+  groups         Group[]        @relation(fields: [groupIds], references: [id])
+  groupIds       String[]       @db.ObjectId
+  
+  expenseSplits  ExpenseSplit[]
+  giveTakeAmount GiveTakeAmount[]  // Updated model name for consistency
 }
 
 model Group {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   name        String
-  isGroup    Boolean?
-  users      User[]       @relation(fields: [userIds],references: [id])
-  userIds    String[]     @db.ObjectId
+  isGroup     Boolean?
+  users       User[]       @relation(fields: [userIds], references: [id])
+  userIds     String[]     @db.ObjectId
   createdAt   DateTime     @default(now())
-  // members     GroupMember[]
   expenses    Expense[]
 }
-
-// model GroupMember {
-//   id          String       @id @default(auto()) @map("_id") @db.ObjectId
-//   user        User         @relation(fields: [userId], references: [id])
-//   userId      String       @db.ObjectId
-//   // group       Group        @relation(fields: [groupId], references: [id])
-//   // groupId     String       @db.ObjectId
-//   joinedAt    DateTime     @default(now())
-
-//   // @@unique([userId, groupId]) // Ensures a user can only join a group once
-// }
 
 model Expense {
   id            String       @id @default(auto()) @map("_id") @db.ObjectId
   description   String
   amount        Float
   createdAt     DateTime     @default(now())
-   equalSplite Boolean?
-  unEqualSplite Boolean?
-  // The user who added the expense (could be adding for someone else)
+  equalSplit    Boolean?     // Fixed spelling
+  unequalSplit  Boolean?     // Fixed spelling
   createdBy     User         @relation("ExpenseCreator", fields: [createdById], references: [id])
   createdById   String       @db.ObjectId 
-  // The user who actually paid the expense
-  paidBy        User[]         @relation("ExpensePayer", fields: [paidByIds], references: [id])
-  paidByIds      String[]       @db.ObjectId
+  paidBy        User[]       @relation("ExpensePayer", fields: [paidByIds], references: [id])
+  paidByIds     String[]     @db.ObjectId
   group         Group        @relation(fields: [groupId], references: [id])
   groupId       String       @db.ObjectId
   splits        ExpenseSplit[]
@@ -82,19 +58,20 @@ model Expense {
 
 model ExpenseSplit {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
- 
   user        User         @relation(fields: [userId], references: [id])
   userId      String       @db.ObjectId
   expense     Expense      @relation(fields: [expenseId], references: [id])
   expenseId   String       @db.ObjectId
   amount      Float        // The portion of the total expense this user needs to pay
-  returnBackAmout Float?
+  returnBackAmount Float?   // Fixed spelling
 }
-model givetakeamount{
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  user    User @relation(fields: [userId],references: [id])
-  userId  String @db.ObjectId
-  paidAmount Float?
-  takeAmount Float?
-  giveAount Float?
+
+model GiveTakeAmount { // Updated model name to be consistent
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  user        User         @relation(fields: [userId], references: [id])
+  userId      String       @db.ObjectId
+  takeId      String?     
+  paidAmount  Float?
+  takeAmount  Float?
+  giveAmount  Float?       // Fixed spelling
 }
