@@ -1,10 +1,14 @@
-import React from 'react'
+import { getUsers } from '../actions/getUsers'
+import MiddleInformation from './component/MiddleInformation'
 
 
 const users =async () => {
+  const users=await getUsers();
   return (
-    <div>
-  hi
+    <div className='w-full'>
+      <MiddleInformation users={users}/>
+      jhjhjh
+      
     </div>
   )
 }

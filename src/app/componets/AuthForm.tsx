@@ -1,6 +1,6 @@
 "use client"
 import React, { useCallback, useState } from 'react'
-import Input from './Input'
+import Input from './Input/Input'
 import axios from 'axios'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import Button from './Button/Button'

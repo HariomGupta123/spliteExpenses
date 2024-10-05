@@ -3,7 +3,7 @@ import prisma from "./prismadb";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcryptjs';
 import { NextAuthOptions } from "next-auth";
 import { User } from "@prisma/client"; // Assuming you're using Prisma for the user model
 import { JWT } from "next-auth/jwt";
