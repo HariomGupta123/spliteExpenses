@@ -5,14 +5,15 @@ interface InputProps {
     register: UseFormRegister<FieldValues>
     type?: string,
     id: string,
-    label: string,
+    label?: string,
     required?: boolean,
     errors: FieldErrors;
     disabled?: boolean;
+    placeholder?:string
 
 
 }
-const Input: React.FC<InputProps> = ({ register, type, id, label, required, errors, disabled }) => {
+const Input: React.FC<InputProps> = ({ register, type, id, label, required, errors, disabled,placeholder }) => {
     return (
         <div>
             <label className="block text-sm font-medium leading-6 text-gray-900 "> {label}</label>
@@ -24,6 +25,7 @@ const Input: React.FC<InputProps> = ({ register, type, id, label, required, erro
                     id={id}
                     autoComplete={id}
                     disabled={disabled}
+                    placeholder={placeholder}
                     className={
                         clsx(`form-input block
                              w-full
@@ -31,7 +33,7 @@ const Input: React.FC<InputProps> = ({ register, type, id, label, required, erro
                                border-0
                                 py-1.5
                                  text-gray-900 
-                                 shadow-sm 
+                                 shadow-lg 
                                  ring-1
                                   ring-inset
                                     ring-gray-900

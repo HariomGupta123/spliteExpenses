@@ -5,9 +5,9 @@ import getCurrentUser from '../actions/getCurrentUser';
 import Header from './component/Header/Header';
 
 const Userlayout =async ({children}:{children:React.ReactNode}) => {
-  const currentUsers = await getUsers();
-  const user=await getCurrentUser()
-  console.log("currentuser",user)
+  const Users = await getUsers();
+  const currentUser=await getCurrentUser()
+  const withCurrentUser=[...Users,currentUser]
   return (
     <div>
       <div className='sticky z-10 top-0'>
@@ -16,7 +16,7 @@ const Userlayout =async ({children}:{children:React.ReactNode}) => {
      
       <div className='w-full flex h-[100vh]'>
         <div className='flex-grow h-full'>
-          <Userlist item={currentUsers} email={user?.email} />
+          <Userlist item={withCurrentUser} email={currentUser?.email} />
         </div>
         <div className='flex-grow flex z-5  border-l border-r border-black shadow-lg  '>
           {children}
