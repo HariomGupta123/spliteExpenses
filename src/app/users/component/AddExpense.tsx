@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import Button from '@/app/componets/Button/Button';
 import Select from '@/app/componets/Input/Select';
 import Model from '@/app/componets/Model/Model';
@@ -31,9 +30,9 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users }) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const members = watch('members'); // Watching the members field to update UI
-    const amount=watch('amount')
+    const amount = watch('amount')
     const router = useRouter();
-const date=new Date()
+    const date = new Date()
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         setIsLoading(true);
         axios.post('/api/group', { ...data, isGroup: true })
@@ -45,7 +44,7 @@ const date=new Date()
             .finally(() => setIsLoading(false));
     };
     const numberOfMembers = members.length;
-    const splitAmount = (numberOfMembers > 0 && amount) ? ((Number(amount) / numberOfMembers).toFixed(2)) :( 0);
+    const splitAmount = (numberOfMembers > 0 && amount) ? ((Number(amount) / numberOfMembers).toFixed(2)) : (0);
     return (
         <Model isOpen={isOpen} onClose={onClose} >
             <div className='p-6 bg-white rounded-lg '>
@@ -87,7 +86,7 @@ const date=new Date()
                                             style={{ border: 'none' }}
                                         // Ensure no outline and border on focus
                                         />
-                                        <hr className=" border-gray-300 border-dashed border-1/5 " />                                        
+                                        <hr className=" border-gray-300 border-dashed border-1/5 " />
                                         <input
                                             {...register("amount", { required: true })}
                                             type="number"
@@ -99,9 +98,9 @@ const date=new Date()
                                         // Ensure no outline and border on focus
                                         // className="outline-none focus:outline-none"
                                         />
-                                        <hr className=" border-gray-300 border-dashed border-1 " />                                     
+                                        <hr className=" border-gray-300 border-dashed border-1 " />
 
-                                        
+
 
                                     </div>
 
@@ -110,7 +109,7 @@ const date=new Date()
                                 <div className="mt-5 text-center flex row-2 gap-2 ">
                                     <span>
                                         Paid by <span className='bg-gray-100 hover:bg-gray-200 rounded-xl py-1 px-2 border-dashed border-2 border-orange-300 cursor-pointer'>You</span> and splite <span className='bg-gray-100 hover:bg-gray-200 rounded-xl py-1 px-2 border-dashed border-2 border-orange-300 cursor-pointer'>Equally</span>
-                                       
+
                                     </span>
                                     <span>  (({splitAmount})/per)</span>
                                 </div>

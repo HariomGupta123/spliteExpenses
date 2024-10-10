@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import AddExpense from './AddExpense'
 import { User } from '@prisma/client'
 interface MiddleInformationProps{
-    users:User[] |null|undefined
+    users:User[] | null | undefined
 }
 const MiddleInformation:React.FC<MiddleInformationProps> = ({users}) => {
     const [isOpen,setIsOpen]=useState(false)
