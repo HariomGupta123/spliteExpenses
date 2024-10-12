@@ -1,6 +1,7 @@
 "use client"
 
 import { Dialog, DialogPanel, Transition, TransitionChild } from "@headlessui/react";
+import clsx from "clsx";
 import { Fragment } from "react";
 import { IoClose } from "react-icons/io5";
 
@@ -8,8 +9,10 @@ interface ModelProps {
     isOpen?: Boolean;
     onClose: () => void;
     children: React.ReactNode
+    heading: string,
+    style?:string
 }
-const Model: React.FC<ModelProps> = ({ isOpen, onClose, children }) => {
+const Model: React.FC<ModelProps> = ({ isOpen, onClose, children ,heading,style}) => {
     return (
         <Transition
             show={isOpen}
@@ -23,23 +26,20 @@ const Model: React.FC<ModelProps> = ({ isOpen, onClose, children }) => {
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
-                    <div className="fixed inset-0 bg-gray-500 bg-opacity-75
-                transition-opacity
-                "/>
+                    <div className={clsx(style ? "fixed inset-0  bg-opacity-75   transition-opacity " :"fixed inset-0 bg-gray-500 bg-opacity-75   transition-opacity ")}/>
 
 
 
                 </TransitionChild>
-                <div className="fixed inset-0 z-0 overflow-y-auto">
+                <div className={clsx(style ? style :"inset-0","fixed z-0 overflow-y-auto")}>
                     <div className="
-                               flex 
-                                 min-h-full 
-                                items-center 
-                                justify-center 
-                                  p-4
-                                 text-center
-                                      sm:p-0
-                                         ">
+                            flex 
+                            min-h-full 
+                            items-center 
+                            justify-center 
+                          
+                            text-center
+                            sm:p-0 ">
                         <TransitionChild
                             as={Fragment}
                             enter="ease-out duration-300"
@@ -47,50 +47,56 @@ const Model: React.FC<ModelProps> = ({ isOpen, onClose, children }) => {
                             enterTo="opacity-100 translate-y-0 sm:scale-100"
                             leave="ease-in duration-200"
                             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                            leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                        >
+                            leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                
                             <DialogPanel className="ralative
-                    transform
-                    overflow-hidden
-                    rounded-lg
-                    bg-white
-                    px-4
-                    pb-4
-                    text-left
-                    shadow-xsl
-                    transition-all
-                    w-full
-                    sm:my-8
-                    sm:w-full
-                    sm:max-w-lg
-                    sm:p-6
-                    ">
+                                 transform
+                                overflow-hidden
+                                rounded-lg
+                              bg-white
+                                px-4
+                                pb-4
+                                text-left
+                                shadow-xsl
+                                transition-all
+                                w-full
+                                sm:my-8
+                                sm:w-full
+                                sm:max-w-lg
+                                sm:p-6
+                                ">
                                 <div className="absolute right-0
-                        top-0
-                        hidden
-                        pr-4
-                        pt-4
-                        sm:block
-                        z-10
-                        ">
+                                     top-0
+                                     h-10
+                                     hidden
+                                     bg-green-600
+                                     w-full
+                                    items-center
+                                      pr-4
+                                       pt-4
+                                        sm:block
+                                         z-10
+                                         ">
+                                    <span className="absolute
+                                        top-2
+                                        left-5    font-semibold  text-gray-900  ">{heading}</span>
                                     <button
-                                        type="button"
-                                        className="
-                            rounded-md
-                            bg-white
-                            text-gray-500
-                            focus:outline-none
-                            hover:text-gray-500
-                            focus:ring-2
-                            focus:ring-sky-500
-                            focus:ring-offset-2
-                            "
-                                        onClick={onClose}
-                                    >
+                                       type="button"
+                                       className="
+                                        rounded-md
+                                        absolute
+                                        top-2
+                                        right-5
+                                     
+                                      text-gray-500
+                                        focus:outline-none
+                                       hover:text-gray-500
+                                        focus:ring-2
+                                      focus:ring-sky-500
+                                        focus:ring-offset-2 "
+                                        onClick={onClose} >
                                         <span className="sr-only">Close</span>
-                                        <IoClose
-                                            className="h-6 w-6"
-                                        />
+                                        <IoClose className="h-6 w-6 text-white"/>
                                     </button>
 
                                 </div>

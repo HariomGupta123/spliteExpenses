@@ -10,6 +10,8 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import AddedFriends from './ChoosePayer';
+import ChooseSpliteOption from './ChooseSpliteOption';
 
 
 interface AddExpenseProps {
@@ -29,6 +31,8 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users }) => {
     });
 
     const [isLoading, setIsLoading] = useState(false);
+    const [openPayer,setOpenPayer] =useState(false)
+    const [isSpliteOption,setIsSpliteOption]=useState(false)
     const members = watch('members'); // Watching the members field to update UI
     const amount = watch('amount')
     const router = useRouter();
@@ -44,15 +48,20 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users }) => {
             .finally(() => setIsLoading(false));
     };
     const numberOfMembers = members.length;
+   
+    
     const splitAmount = (numberOfMembers > 0 && amount) ? ((Number(amount) / numberOfMembers).toFixed(2)) : (0);
+    const selectedUserNames = users
+        ?.filter(user => members.some((member:any )=> member.value === user.id)) // Compare with member.value
+        .map(user => user.name) || [];
+    console.log("numberofArray:", selectedUserNames)
     return (
-        <Model isOpen={isOpen} onClose={onClose} >
-            <div className='p-6 bg-white rounded-lg '>
+        <>
+        <Model isOpen={isOpen} onClose={onClose} heading='Add an Expenses' >
+            <div className=' bg-white rounded-lg '>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="space-y-12">
-                        <h2 className=" flex justify-between rounded-lg p-2 border-b border-gray-900/10 text-base font-semibold leading-7 text-gray-900  h-full">
-                            Add an Expense
-                        </h2>
+                      
                         <div className="border-b border-gray-900/10 pb-2">
 
                             <div className="mt-5 text-sm flex-col gap-y-4">
@@ -107,13 +116,12 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users }) => {
 
                                 </div>
                                 <div className="mt-5 text-center flex row-2 gap-2 ">
-                                    <span>
-                                        Paid by <span className='bg-gray-100 hover:bg-gray-200 rounded-xl py-1 px-2 border-dashed border-2 border-orange-300 cursor-pointer'>You</span> and splite <span className='bg-gray-100 hover:bg-gray-200 rounded-xl py-1 px-2 border-dashed border-2 border-orange-300 cursor-pointer'>Equally</span>
-
+                                    <span className='text-sm'>
+                                            Paid by <span className='bg-gray-100 hover:bg-gray-200 rounded-xl  px-2 border-dashed border-2 border-orange-300 cursor-pointer' onClick={() => setOpenPayer(true)}>You</span> and splite <span className='bg-gray-100 hover:bg-gray-200 rounded-xl  px-2 border-dashed border-2 border-orange-300 cursor-pointer' onClick={()=>setIsSpliteOption(true)}>Equally</span>
                                     </span>
-                                    <span>  (({splitAmount})/per)</span>
+                                    <span className='text-sm'>  (({splitAmount})/per)</span>
                                 </div>
-                                <div className='flex mt-5 gap-4'>
+                                <div className='flex mt-5 gap-4 text-sm'>
                                     <span className='rounded-3xl border-orange-100 border-2 px-12 py-1 bg-gray-100 hover:bg-gray-200 cursor-pointer'>{date.toLocaleDateString()}</span>
                                     <span className='rounded-3xl border-orange-100 border-2 px-12 py-1 bg-gray-100 hover:bg-gray-200 cursor-pointer'>Add note/imags</span>
 
@@ -128,7 +136,12 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users }) => {
                     </div>
                 </form>
             </div>
+
         </Model>
+            {openPayer && <AddedFriends onClose={() => setOpenPayer(false)} openPayer={openPayer} style={"top-28 right-12 "} userName={selectedUserNames} register={register} errors={errors} />}
+            {isSpliteOption && <ChooseSpliteOption onClose={() => setIsSpliteOption(false)} isSpliteOption={isSpliteOption} style='top-28 right-12' userName={selectedUserNames} register={register} errors={errors} />}
+
+        </>
     );
 };
 
