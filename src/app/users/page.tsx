@@ -9,7 +9,7 @@ const users =async () => {
   const allUsers = currentUser ? [...users, currentUser] : users;
   return (
     <div className='w-full'>
-      <MiddleInformation users={allUsers}/>
+      <MiddleInformation users={allUsers} currentUser={currentUser}/>
       jhjhjh
       
     </div>

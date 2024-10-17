@@ -4,12 +4,14 @@ import AddExpense from './AddExpense'
 import { User } from '@prisma/client'
 interface MiddleInformationProps{
     users:User[] | null | undefined
+    currentUser:User
 }
-const MiddleInformation:React.FC<MiddleInformationProps> = ({users}) => {
+const MiddleInformation:React.FC<MiddleInformationProps> = ({users,currentUser}) => {
     const [isOpen,setIsOpen]=useState(false)
+    
     return (
         <>
-        <AddExpense  isOpen={isOpen} onClose={()=>setIsOpen(false)} users={users} />
+        <AddExpense  isOpen={isOpen} onClose={()=>setIsOpen(false)} users={users}  currentUser={currentUser}/>
             <aside className='w-full text-white'>
                 <div className='bg-slate-400 h-14 w-full flex justify-between items-center px-5'>
                     <div className='font-bold text-2xl'>DashBoard</div>
