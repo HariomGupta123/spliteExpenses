@@ -4,8 +4,9 @@ import Input from '@/app/componets/Input/Input'
 import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form'
 import Checkbox from '@/app/componets/Input/CheckBox'
 import clsx from 'clsx'
+import { SimplifiedUser } from '../AddExpense'
 interface ChooseSpliteOptionComProps {
-    userName: (string | null)[]
+    userName: SimplifiedUser[]
     activeOptionButton: number
     register: UseFormRegister<FieldValues>
     errors: FieldErrors;
@@ -26,7 +27,7 @@ const ChooseSpliteOptionCom: React.FC<ChooseSpliteOptionComProps> = ({ userName,
                                 <div key={index} className=' flex  cursor-pointer w-full p-1 px-10 rounded-sm gap-4 hover:bg-slate-100 '>
                                     <Checkbox register={register} errors={errors} id={`string${index}`} type="checkbox" onChange={()=>setIsChecked(true)} />
                                     <div className={clsx('flex gap-5 justify-center items-center', isChecked && "opacity-50 cursor-not- allowed" )}>
-                                        <UserAvatar usersName={user} /><div className='font-bold text-sm'>{"Rs.75"}</div>
+                                        <UserAvatar usersName={user.name} /><div className='font-bold text-sm'>{"Rs.75"}</div>
                                          </div>
 
                                 </div>
@@ -46,7 +47,7 @@ const ChooseSpliteOptionCom: React.FC<ChooseSpliteOptionComProps> = ({ userName,
                         userName.map((user, index) => {
                             return (
                                 <div key={index} className=' flex  cursor-pointer justify-center items-center w-full p-1 px-10 rounded-sm gap-4 hover:bg-slate-200 '>
-                                    <UserAvatar usersName={user} />
+                                    <UserAvatar usersName={user.name} />
                                     <Input register={register} errors={errors} id={`string${index}`} type="number" style='w-12' rupees='Rs' />
 
                                 </div>
@@ -70,7 +71,7 @@ const ChooseSpliteOptionCom: React.FC<ChooseSpliteOptionComProps> = ({ userName,
                         userName.map((user, index) => {
                             return (
                                 <div key={index} className=' flex  cursor-pointer justify-center items-center w-full p-1 px-10 rounded-sm gap-4 hover:bg-slate-200 '>
-                                    <UserAvatar usersName={user} />
+                                    <UserAvatar usersName={user.name} />
                                     <Input register={register} errors={errors} id={`string${index}`} type="number" style='w-12' rupees='%' />
 
                                 </div>
@@ -93,7 +94,7 @@ const ChooseSpliteOptionCom: React.FC<ChooseSpliteOptionComProps> = ({ userName,
                         userName.map((user, index) => {
                             return (
                                 <div key={index} className=' flex  cursor-pointer w-full justify-center items-center p-1 px-10 rounded-sm gap-4 hover:bg-slate-200'>
-                                    <UserAvatar usersName={user} amount={`${45}`} />    
+                                    <UserAvatar usersName={user.name} amount={`${45}`} />    
                                     <Input register={register} errors={errors} id={`string${index}`} type="number" style='w-12' rupees='share(s)' />
                                   
 
@@ -114,7 +115,7 @@ const ChooseSpliteOptionCom: React.FC<ChooseSpliteOptionComProps> = ({ userName,
                         userName.map((user, index) => {
                             return (
                                 <div key={index} className=' flex  cursor-pointer w-full justify-center items-center p-1 px-10 rounded-sm gap-4 hover:bg-slate-200'>
-                                    <UserAvatar usersName={user} amount={`${45}`} />
+                                    <UserAvatar usersName={user.name} amount={`${45}`} />
 
                                     <Input register={register} errors={errors} id={`string${index}`} type="number" style='w-12' rupees='+Rs' />
                                 

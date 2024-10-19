@@ -24,7 +24,7 @@ interface ChoosePayerProps {
     style?: string;
     errors: FieldErrors;
     userName: SimplifiedUser[] ;
-    setOpenPayerUser: (user: { userId: string; userName: string; PaidAmount: number  }) => void;
+    setOpenPayerUser: (user: { userId: string; userName: string; PaidAmount: number,paidOwn?:string  } | any) => void;
     currentUser:User
 }
 
@@ -54,6 +54,7 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ onClose, openPayer, style, us
                     userId: user.id,
                     userName: user.name,
                     PaidAmount: equalSplitAmount || 0,
+                    paidOwn:"Each person paid for their own share"
                 });
             } else {
                 // Set the individual paid value when unchecked

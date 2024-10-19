@@ -26,6 +26,7 @@ export interface person{
     userId: string;
     userName: string |null |any
     PaidAmount: number
+    paidOwn?:string
 }
 interface AddExpenseProps {
     isOpen?: boolean; // corrected the type here
@@ -47,8 +48,9 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users ,current
     const amount = watch('amount')
 
     const [isLoading, setIsLoading] = useState(false);
-    const [isChecked, setIsChecked] = useState(true)
-    const [openPayer,setOpenPayer] =useState(false)
+    const [isChecked, setIsChecked] = useState(false);
+    const [openPayer,setOpenPayer] =useState(false);
+    const [isEqual,setIsEqual]=useState(false)
     const [openPayerUser, setOpenPayerUser] = useState<person[] |[]>([
        { userId: currentUser.id,
       userName: currentUser.name ,
@@ -135,11 +137,13 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users ,current
     const retrievePeople=getValues("people")
     console.log("retrievePeople:",retrievePeople)
     
-    const chooseOnePayer = (newState: { userId: string, userName: string, PaidAmount: number }) => {
-        setOpenPayerUser(newState); // Update the state with the new user data
+    const chooseOnePayer = (newState: { userId: string, userName: string, PaidAmount: number,paidOwn?:string }) => {
+        setOpenPayerUser([newState]); // Update the state with the new user data
     };
     console.log("openPayerUser",openPayerUser)
-
+    console.log("numberOfPayer:",openPayerUser.length.valueOf)
+    const lengthOfInnerArray = openPayerUser[0]?.length || 0; // Safe access with optional chaining
+    console.log(lengthOfInnerArray); // Output: 2
     return (
         <>
         <Model isOpen={isOpen} onClose={onClose} heading='Add an Expenses' >
@@ -203,7 +207,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users ,current
                                 <div className="mt-5 text-center flex row-2 gap-2 ">
                                     <span className='text-sm'>
                                             {/* (openPayerUser.filter((user)=>user.id ===currentUser.id) && "You")"you" */}
-                                            Paid by <span className='bg-gray-100 hover:bg-gray-200 rounded-xl  px-2 border-dashed border-2 border-orange-300 cursor-pointer' onClick={() => setOpenPayer(true)}>{openPayerUser && openPayerUser.length ==1 ? "you":"multiple"}</span> and splite <span className='bg-gray-100 hover:bg-gray-200 rounded-xl  px-2 border-dashed border-2 border-orange-300 cursor-pointer' onClick={()=>setIsSpliteOption(true)}>Equally</span>
+                                            Paid by <span className='bg-gray-100 hover:bg-gray-200 rounded-xl  px-2 border-dashed border-2 border-orange-300 cursor-pointer' onClick={() => setOpenPayer(true)}>{openPayerUser && openPayerUser.length ==1 ? "you":"multiple"}</span> and splite <span className='bg-gray-100 hover:bg-gray-200 rounded-xl  px-2 border-dashed border-2 border-orange-300 cursor-pointer' onClick={()=>setIsSpliteOption(true)}>{isEqual ? "unEqually":"Equally"}</span>
                                     </span>
                                     <span className='text-sm'>  (({equalSplitAmount})/per)</span>
                                 </div>
@@ -227,18 +231,20 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users ,current
                          style={"top-28 right-12 "} 
                          userName={fields} 
                          register={register} 
+                         currentUser={currentUser}
                          errors={errors}
                          setOpenPayerUser={chooseOnePayer}
                          key="uniqueKey" 
                          equalSplitAmount={equalSplitAmount} 
                          setIsChecked={()=>setIsChecked(!isChecked)} 
                          isChecked={isChecked} />}
-
-                         {/* for Choose SpliteOption */}
+       
+                 {/* for Choose SpliteOption */}
                         {isSpliteOption && <ChooseSpliteOption
                          onClose={() => setIsSpliteOption(false)} 
                          isSpliteOption={isSpliteOption} 
                          style='top-28 right-12' 
+                         setIsEqual={(any)=>setIsEqual(any)}
                          userName={fields} 
                          register={register} 
                          errors={errors} />}
