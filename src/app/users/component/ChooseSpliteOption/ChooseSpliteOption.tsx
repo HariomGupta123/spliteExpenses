@@ -9,24 +9,26 @@ interface ChooseSpliteOptionProps {
     onClose: () => void;
     isSpliteOption: Boolean;
     style?: string;
-    setIsEqual:(boolean:boolean)=>void
+    setIsEqual: (boolean: boolean) => void
     errors: FieldErrors;
     userName: SimplifiedUser[]
+    ChooseSpliteOptionFunction: (user: { userId: string; userName: string; PaidAmount: number, paidOwn?: string } | any) => void;
 }
+const shareType = ["=", "1.23","%", "share", "+/-"]
 
-const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose, isSpliteOption, style, errors, userName, register,setIsEqual }) => {
-    const [activeOptionButton, setActiveOptionButton] = useState(1);
+const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose,ChooseSpliteOptionFunction, isSpliteOption, style, errors, userName, register, setIsEqual }) => {
+    const [activeOptionButton, setActiveOptionButton] = useState("=");
 
     const handleClick = (buttonIndex: any) => {
-        if(buttonIndex === 1){
+        if (buttonIndex === "=") {
             setActiveOptionButton(buttonIndex);
             setIsEqual(false)
-        }else{
+        } else {
             setActiveOptionButton(buttonIndex);
             setIsEqual(true)
-            
+
         }
-       
+
     };
 
     return (
@@ -45,7 +47,7 @@ const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose, isSpli
                          cursor-pointer
                        hover:bg-slate-300 
                        active:bg-slate-300 
-                       ${activeOptionButton === 1 ? 'bg-slate-400' : ''}`}
+                       ${activeOptionButton === "=" ? 'bg-slate-400' : ''}`}
                         onClick={() => handleClick(1)}>
                         Splite the Expenses
                     </div>
@@ -60,7 +62,7 @@ const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose, isSpli
                          cursor-pointer
                        hover:bg-slate-300 
                        active:bg-slate-300 
-                       ${activeOptionButton === 2 ? 'bg-slate-400' : ''}`}
+                       ${activeOptionButton === "" ? 'bg-slate-400' : ''}`}
                         onClick={() => handleClick(1)}>
                         you owe md Rs. 500
                     </div>
@@ -75,7 +77,7 @@ const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose, isSpli
                          cursor-pointer
                        hover:bg-slate-300 
                        active:bg-slate-300 
-                       ${activeOptionButton === 1 ? 'bg-slate-400' : ''}`}
+                       ${activeOptionButton === "" ? 'bg-slate-400' : ''}`}
                         onClick={() => handleClick(1)}>
                         Md owes you Rs. 500
                     </div>
@@ -85,69 +87,27 @@ const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose, isSpli
 
                 {/* Option Switcher */}
                 <div className="border-red-400 border-2 rounded-sm mt-2 flex ">
-                    <div className={`
+                    {shareType.map((share, index) => (<div key={index} className={`
                         border-red-400 
                          border-r-2 w-full 
                          text-center font-semibold 
                          text-lg bg-slate-100 
                          hover:bg-slate-300 cursor-pointer 
-                         ${activeOptionButton === 1 ? 'bg-slate-400' : ''}`}
-                        onClick={() => handleClick(1)}>
-                        =
-                    </div>
-                    <div className={`
-                        border-red-400 
-                         border-r-2 w-full 
-                         text-center font-semibold 
-                         text-lg bg-slate-100 
-                         hover:bg-slate-300 cursor-pointer 
-                         ${activeOptionButton === 2 ? 'bg-slate-400' : ''}`}
-                        onClick={() => handleClick(2)}>
-                        1.23
-                    </div>
-                    <div
-                        className={`
-                        border-red-400 
-                         border-r-2 w-full 
-                         text-center font-semibold 
-                         text-lg bg-slate-100 
-                         hover:bg-slate-300 cursor-pointer 
-                         ${activeOptionButton === 3 ? 'bg-slate-400' : ''}`}
-                        onClick={() => handleClick(3)}>                        %
-                    </div>
-                    <div
-                        className={`
-                        border-red-400 
-                         border-r-2 w-full 
-                         text-center font-semibold 
-                         text-lg bg-slate-100 
-                         hover:bg-slate-300 cursor-pointer 
-                         ${activeOptionButton === 4 ? 'bg-slate-400' : ''}`}
-                        onClick={() => handleClick(4)}>
-                        share
-                    </div>
-                    <div
-                        className={`
-                        border-red-400 
-                         border-r-2 w-full 
-                         text-center font-semibold 
-                         text-lg bg-slate-100 
-                         hover:bg-slate-300 cursor-pointer 
-                         ${activeOptionButton === 5 ? 'bg-slate-400' : ''}`}
-                        onClick={() => handleClick(5)
-                         
-                        }>                        +/-
-                    </div>
-                </div>
+                         ${activeOptionButton === share ? 'bg-slate-400' : ''}`}
+                        onClick={() => handleClick(share)}>
+                        {share}
+                    </div>))}
 
-                {/* Choose Splite Option Component */}
-                <div className='mt-2'>
+                </div>
+                <div>
                     <ChooseSpliteOptionCom
-                     
-                        userName={userName}
-                        activeOptionButton={activeOptionButton}
-                        register={register}
-                        errors={errors} />
+                    userName={userName}
+                    errors={errors}
+                    register={register}
+                    activeOptionButton={activeOptionButton}
+                    ChooseSpliteOptionFunction={ChooseSpliteOptionFunction}
+                    
+                    />
                 </div>
             </div>
         </Model>

@@ -246,6 +246,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users ,current
                          style='top-28 right-12' 
                          setIsEqual={(any)=>setIsEqual(any)}
                          userName={fields} 
+                         ChooseSpliteOptionFunction={chooseOnePayer}
                          register={register} 
                          errors={errors} />}
 
