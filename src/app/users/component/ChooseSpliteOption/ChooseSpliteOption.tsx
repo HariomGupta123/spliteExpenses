@@ -3,20 +3,25 @@ import React, { useState } from 'react'
 import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
 import ChooseSpliteOptionCom from './ChooseSpliteOptionCom';
 import { SimplifiedUser } from '../AddExpense';
+import { User } from '@prisma/client';
 
 interface ChooseSpliteOptionProps {
     register: UseFormRegister<FieldValues>;
+    selectedMembers:number | string |any
+    equalSplitAmount: number | string // Ensure it's a number
     onClose: () => void;
     isSpliteOption: Boolean;
     style?: string;
+    currentUser:User
     setIsEqual: (boolean: boolean) => void
+    whoOwns:(owns:string | number)=>void
     errors: FieldErrors;
     userName: SimplifiedUser[]
     ChooseSpliteOptionFunction: (user: { userId: string; userName: string; PaidAmount: number, paidOwn?: string } | any) => void;
 }
 const shareType = ["=", "1.23","%", "share", "+/-"]
 
-const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose,ChooseSpliteOptionFunction, isSpliteOption, style, errors, userName, register, setIsEqual }) => {
+const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose,ChooseSpliteOptionFunction,currentUser, equalSplitAmount,isSpliteOption, style, errors, whoOwns,userName, register, setIsEqual,selectedMembers }) => {
     const [activeOptionButton, setActiveOptionButton] = useState("=");
 
     const handleClick = (buttonIndex: any) => {
@@ -30,13 +35,16 @@ const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose,ChooseS
         }
 
     };
-
+    const amount = typeof equalSplitAmount === 'string' ? parseFloat(equalSplitAmount) : equalSplitAmount;
+    const otherOne = (selectedMembers <= 2)? userName.find((user) =>user.name !==currentUser.name)?.name :"you"
+        console.log(otherOne)
+    const chooseOwn = [ `you owe md Rs.${amount * selectedMembers}`, `${otherOne} owes you Rs. ${amount * selectedMembers}`]
     return (
         <Model heading='Choose Splite Option ' isOpen={isSpliteOption} onClose={onClose} style={style}>
             <div className='mt-8'>
                 {/* Option Buttons */}
-                <div className=' gap-3'>
-                    <div className={`border-red-400
+               {selectedMembers <= 2 ? <div className=' gap-3'>
+                    <div  className={`border-red-400
                          border-2 
                          rounded-2xl 
                          px-16 
@@ -48,10 +56,14 @@ const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose,ChooseS
                        hover:bg-slate-300 
                        active:bg-slate-300 
                        ${activeOptionButton === "=" ? 'bg-slate-400' : ''}`}
-                        onClick={() => handleClick(1)}>
-                        Splite the Expenses
+                        onClick={() => {
+                            whoOwns("Splite the Expenses")
+                            handleClick("=")
+                        }}>
+                        Splite the Expenses 
                     </div>
-                    <div className={`border-red-400
+                    {chooseOwn.map((owns,index)=>{
+                        return (<div key={index} className={`border-red-400
                          border-2 
                          rounded-2xl 
                          px-16 
@@ -62,28 +74,17 @@ const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose,ChooseS
                          cursor-pointer
                        hover:bg-slate-300 
                        active:bg-slate-300 
-                       ${activeOptionButton === "" ? 'bg-slate-400' : ''}`}
-                        onClick={() => handleClick(1)}>
-                        you owe md Rs. 500
-                    </div>
-                    <div className={`border-red-400
-                         border-2 
-                         rounded-2xl 
-                         px-16 
-                       bg-slate-200 
-                         w-full 
-                         text-sm 
-                         mt-2 
-                         cursor-pointer
-                       hover:bg-slate-300 
-                       active:bg-slate-300 
-                       ${activeOptionButton === "" ? 'bg-slate-400' : ''}`}
-                        onClick={() => handleClick(1)}>
-                        Md owes you Rs. 500
-                    </div>
-                </div>
+                       ${ activeOptionButton === "=" ? 'bg-slate-400' : ''}`}
+                            onClick={() => {
+                                whoOwns(owns)
+                                handleClick(1)}}>
+                          {owns}
+                        </div>)
+                    })}  
+                    <div className='mt-2 w-full border-b-[1px] border-lime-700' /> 
+                </div> : ""}
 
-                <div className='mt-2 w-full border-b-[1px] border-lime-700' />
+               
 
                 {/* Option Switcher */}
                 <div className="border-red-400 border-2 rounded-sm mt-2 flex ">
@@ -100,8 +101,10 @@ const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose,ChooseS
 
                 </div>
                 <div>
-                    <ChooseSpliteOptionCom
+                    <ChooseSpliteOptionCom   
+                    selectedMembers={selectedMembers}
                     userName={userName}
+                    equalSplitAmount={equalSplitAmount}
                     errors={errors}
                     register={register}
                     activeOptionButton={activeOptionButton}

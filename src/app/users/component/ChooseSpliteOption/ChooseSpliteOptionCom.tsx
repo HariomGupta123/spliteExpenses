@@ -11,20 +11,22 @@ import ExactAmount from './ExactAmount'
 import Percentage from './Percentage'
 import Equally from './Equally'
 interface ChooseSpliteOptionComProps {
+    selectedMembers: number
     userName: SimplifiedUser[]
     activeOptionButton: number | any |null
     register: UseFormRegister<FieldValues>
     errors: FieldErrors;
+    equalSplitAmount: number | string 
     ChooseSpliteOptionFunction: (user: { userId: string; userName: string; PaidAmount: number, paidOwn?: string } | any) => void;
 
 }
-const ChooseSpliteOptionCom: React.FC<ChooseSpliteOptionComProps> = ({ userName,ChooseSpliteOptionFunction, activeOptionButton, register, errors }) => {
+const ChooseSpliteOptionCom: React.FC<ChooseSpliteOptionComProps> = ({ userName,ChooseSpliteOptionFunction, activeOptionButton, register, errors,equalSplitAmount }) => {
     const [isChecked, setIsChecked] = useState(false)
 
     return (
         <>
             {/* Split by exact amounts */}
-            {activeOptionButton === "=" && <Equally userName={userName} setIsChecked={()=>setIsChecked(true)} register={register} errors={errors} isChecked={isChecked}/>}
+            {activeOptionButton === "=" && <Equally equalSplitAmount={equalSplitAmount} userName={userName} setIsChecked={()=>setIsChecked(true)} register={register} errors={errors} isChecked={isChecked}/>}
 
             {/* //Split by exact amounts */}
             {activeOptionButton === "1.23" && <ExactAmount userName={userName} register={register} errors={errors} />}

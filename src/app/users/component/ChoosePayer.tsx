@@ -12,37 +12,35 @@ import { User } from '@prisma/client'
 //     paid: number;
 // }
 
-
-
 interface ChoosePayerProps {
     register: UseFormRegister<FieldValues>;
-    equalSplitAmount: number |string // Ensure it's a number
-    isChecked?:boolean
+    equalSplitAmount: number | string // Ensure it's a number
+    isChecked?: boolean
+    isMultiple: boolean
+    setIsMultiple: (isMultiple: any) => void
     onClose: () => void;
     openPayer: Boolean;
-    setIsChecked?:()=>void
+    setIsChecked: (isChecked: any | undefined) => void
     style?: string;
     errors: FieldErrors;
-    userName: SimplifiedUser[] ;
-    setOpenPayerUser: (user: { userId: string; userName: string; PaidAmount: number,paidOwn?:string  } | any) => void;
-    currentUser:User
+    userName: SimplifiedUser[];
+    setOpenPayerUser: (user: { userId: string; userName: string; PaidAmount: number, paidOwn?: string } | any) => void;
+    currentUser: User
 }
 
-const ChoosePayer: React.FC<ChoosePayerProps> = ({ onClose, openPayer, style, userName, register, errors ,equalSplitAmount,setOpenPayerUser,currentUser}) => {
-    const [isMultiple, setIsMultiple] = useState(false)
-    const [isChecked, setIsChecked] = useState(false)
+const ChoosePayer: React.FC<ChoosePayerProps> = ({ onClose, openPayer, style, userName, register, errors, equalSplitAmount, setOpenPayerUser, currentUser, isMultiple, setIsMultiple, isChecked, setIsChecked }) => {
 
     const { setValue, control, watch, handleSubmit } = useForm();
     const people = useWatch({ control, name: 'people' }) || []; // Watch the values for the people array
     const amount = typeof equalSplitAmount === 'string' ? parseFloat(equalSplitAmount) : equalSplitAmount;
 
-     const TotalUser:string|number=userName.length
+    const TotalUser: string | number = userName.length
     const handleCheckBox = () => {
         const checked = !isChecked;
         setIsChecked(checked);
 
         // Create an array to store the selected users
-        const updatedUsers:any = [];
+        const updatedUsers: any = [];
 
         userName.forEach((user, index) => {
             if (checked) {
@@ -54,7 +52,7 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ onClose, openPayer, style, us
                     userId: user.id,
                     userName: user.name,
                     PaidAmount: equalSplitAmount || 0,
-                    paidOwn:"Each person paid for their own share"
+                    paidOwn: "Each person paid for their own share"
                 });
             } else {
                 // Set the individual paid value when unchecked
@@ -65,8 +63,8 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ onClose, openPayer, style, us
         // Update the parent state with all selected users
         if (checked) {
             setOpenPayerUser(updatedUsers); // Send all selected users to the parent
-        } else{
-                setOpenPayerUser([])
+        } else {
+            setOpenPayerUser([])
         }
     };
 
@@ -87,7 +85,9 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ onClose, openPayer, style, us
 
                             <div key={user.id} className=' hover:bg-slate-200 cursor-pointer w-full p-1 px-10 rounded-sm shadow-md' onClick={() => {
                                 if (user.name) {
-                                    setOpenPayerUser({userId:user.id,userName:user.name,PaidAmount:amount*TotalUser}); // Safely pass user name to parent
+                                    setOpenPayerUser({ userId: user.id, userName: user.name, PaidAmount: amount * TotalUser }); // Safely pass user name to parent
+                                    setIsMultiple(false)
+                                    onClose()
                                 }
                             }}>
                                 <UserAvatar usersName={user.name} />
@@ -102,48 +102,44 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ onClose, openPayer, style, us
                     <span className='font-semibold text-lg text-slate-950  w-full cursor-pointer' onClick={() => setIsMultiple(!isMultiple)}>Multiple people</span>
                     <div className='  mt-2 w-full border-b-[1px] border-lime-700' />
 
-                   { isMultiple &&( 
-                   
-                    <div>
-                        <Checkbox label='Each person paid for their own share' id='checkbox' type='checkbox' onChange={() => handleCheckBox()} register={register} errors={errors} />
+                    {isMultiple && (
 
-                        {userName && userName.length > 0 ? (
-                            userName.map((user, index) => {
-                                const currentPaid = people[index]?.paid || 0; // Get the value from useWatch
+                        <div>
+                            <Checkbox label='Each person paid for their own share' id='checkbox' type='checkbox' onChange={() => handleCheckBox()} register={register} errors={errors} />
 
-                                console.log(`Current value for ${user.name}:`, currentPaid);
-                                return (
+                            {userName && userName.length > 0 ? (
+                                userName.map((user, index) => {
+                                    const currentPaid = people[index]?.paid || 0; // Get the value from useWatch
 
-                                    <div key={user.id} className=' flex  cursor-pointer w-full p-1 px-10 rounded-sm'>
-                                                                             
-                                        <Input
-                                            id={`people.${index}.paid`}
-                                            label={user.name}
-                                            register={register}
-                                            type="number"
-                                            errors={errors}
-                                            disabled={isChecked}
-                                            rupees="Rs"
-                                            style="w-full"
-                                            defaultValue={currentPaid}
-                                            onChange={(event: any) => handleInputChange(event.target.value, index)}
-                                        />
-                                        <span className="ml-4 text-slate-800">{currentPaid}</span>
-                      
-                                    </div>
-                                );
-                            })
-                        ) : (
-                            <div>No users available</div>
-                        )}
-                    </div>
-                           )}
+                                    console.log(`Current value for ${user.name}:`, currentPaid);
+                                    return (
 
+                                        <div key={user.id} className=' flex  cursor-pointer w-full p-1 px-10 rounded-sm'>
 
+                                            <Input
+                                                id={`people.${index}.paid`}
+                                                label={user.name}
+                                                register={register}
+                                                type="number"
+                                                errors={errors}
+                                                disabled={isChecked}
+                                                rupees="Rs"
+                                                style="w-full"
+                                                defaultValue={currentPaid}
+                                                onChange={(event: any) => handleInputChange(event.target.value, index)}
+                                            />
+                                            <span className="ml-4 text-slate-800">{currentPaid}</span>
+
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <div>No users available</div>
+                            )}
+                        </div>
+                    )}
                 </div>
-
-
-            </div>
+          </div>
         </Model>
     )
 }
