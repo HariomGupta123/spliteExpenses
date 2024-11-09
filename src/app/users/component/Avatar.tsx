@@ -8,11 +8,10 @@ import profile from "../../../../public/cardphoto.jpeg"
 const UserAvatar:React.FC<UserAvatarProps> = ({usersName,amount}) => {
   return (
    
-          <div className=" flex row-auto justify-between items-center w-full ">
+          <div className=" flex row-auto justify-start items-center w-full gap-2 ">
               <span className="mr-2">
                   <Avatar>
-                      <AvatarImage src={profile.src} alt="/profile" />
-                  
+                      <AvatarImage src={profile.src} alt="/profile" />                 
                   </Avatar>
               {amount && <span className="text-xs">total share Rs.{amount}</span>}
                 

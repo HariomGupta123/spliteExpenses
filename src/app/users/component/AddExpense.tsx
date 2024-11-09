@@ -27,6 +27,8 @@ export interface person {
     userName: string | null | any
     PaidAmount: number
     paidOwn?: string
+    kharchOnUser?:number | null |string
+    spliteType?:string
 }
 interface AddExpenseProps {
     isOpen?: boolean; // corrected the type here
@@ -42,7 +44,8 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
             members: [], // This should be an array for multi-select
             amount: '',
             description: '',
-            people: []
+            people: [],
+            spliteOnPercentage:[]
         }
     });
     const amount = watch('amount')
@@ -57,13 +60,21 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
             userName: currentUser.name,
             PaidAmount: amount
         }
-    ])
+    ]);
+  // retriev Splite Type and involve people in splite type
+    const [retriveSpliteType,setRetriveSpliteType]=useState<[]>([]);
+    console.log("retriveSpliteType",retriveSpliteType)
     const [isSpliteOption, setIsSpliteOption] = useState(false)
     const members = watch('members'); // Watching the members field to update UI
     const router = useRouter();
     const date = new Date()
     const numberOfMembers = members.length;
-    const equalSplitAmount = (numberOfMembers > 0 && amount) ? ((Number(amount) / numberOfMembers).toFixed(2)) : (0);
+    const currentUsers=[currentUser]
+    const currentUserLenght=currentUsers.length
+    console.log("currentUsersLength:",currentUserLenght)
+    const numberOfMembersWithCurrentUser=currentUserLenght ? (currentUserLenght+numberOfMembers) :currentUserLenght
+    console.log("numberOfMembersWithCurrentUser", numberOfMembersWithCurrentUser)
+    const equalSplitAmount = (numberOfMembersWithCurrentUser > 0 && amount) ? ((Number(amount) / numberOfMembersWithCurrentUser).toFixed(2)) : (0);
     const useMemoToSelectedUsers = useMemo(() => {
         return users
             ?.filter((user: any) => members.some((member: any) => member.value === user.id))
@@ -77,14 +88,16 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
         control,
         name: "people"
     });
+     console.log("fields:",fields)
+    const fieldSelectedUsersWithCurrentUser = currentUser ? [...fields, currentUser] : currentUser;
+    console.log("fieldSelectedUsersWithCurrentUser", fieldSelectedUsersWithCurrentUser)
 
     // Automatically update the people array whenever selectedUsers changes
     useEffect(() => {
         // Get the current value of the "people" field
         const currentPeople = getValues("people");
-        console.log("currentuser", currentPeople);
         console.log("selected user:", useMemoToSelectedUsers)
-
+         
         // Check if selectedUsers have actually changed
         const hasChanged = useMemoToSelectedUsers.length !== currentPeople.length || useMemoToSelectedUsers.some((user, index) => user.id !== currentPeople[index]?.id);
         console.log(hasChanged)
@@ -94,10 +107,11 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
                 id: user.id,
                 name: user.name,
                 paid: 0,// Initialize paid with 0
+            
             })));
         }
     }, [useMemoToSelectedUsers, setValue, getValues, isChecked]);
-
+    console.log("currentUser",currentUser)
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         setIsLoading(true);
         expenseAmount: amount;
@@ -124,26 +138,42 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
         //     .finally(() => setIsLoading(false));
     };
 
-    const retrievePeople = getValues("people")
-    console.log("retrievePeople:", retrievePeople)
 
-    const chooseOnePayer = (newState: { userId: string, userName: string, PaidAmount: number, paidOwn?: string }) => {
+
+    //  multiple payers
+    const multiplePayerPeople = getValues("people");
+    console.log("paidPeople:",multiplePayerPeople); 
+
+    const chooseOnePayer = (newState: { userId: string, userName: string, PaidAmount: number, paidOwn?: string, kharchOnUser?: number | null | string }) => {
         setOpenPayerUser([newState]); // Update the state with the new user data
     };
-    console.log("openPayerUser", openPayerUser)
+    console.log("openOnePayerUser", openPayerUser)
+
+
+    // splite type
+    const handleRetriveSpliteType=(retriveSpliteType:any)=>{
+        setRetriveSpliteType(retriveSpliteType)
+    }
+    console.log("percentageRRRRR:",retriveSpliteType)
     console.log("numberOfPayer:", openPayerUser.length.valueOf)
-    const lengthOfInnerArray = openPayerUser[0]?.length || 0; // Safe access with optional chaining
-    console.log(lengthOfInnerArray); // Output: 2
+    const innerArray=[openPayerUser]
+    const lengthOfInnerArray = innerArray[0].length || 0; // Safe access with optional chaining
+    console.log("lengthOfInnerArray",lengthOfInnerArray); // Output: 2
     const pickOnePayer = openPayerUser.map((user) => {
         const currentUserName = user.userName === currentUser.name ? "you" : user.userName
-        return (<span key={user.userId}>{currentUserName}</span>)
+        return currentUserName
     }) ;
+
+    console.log("pickone",  pickOnePayer )
     const [selectedOwns, setSelectedOwns] = useState<string | number>(""); // To store the selected option
 
     // Function passed to the child component
     const whoOwns = (owns: string | number) => {
         setSelectedOwns(owns); // Set the selected option from the child
     };
+
+
+
     return (
         <>
             <Model isOpen={isOpen} onClose={onClose} heading='Add an Expenses' >
@@ -177,7 +207,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
                                                 type="text"
                                                 placeholder='description'
                                                 disabled={isLoading}
-                                                className={` block w-full h-5 text-gray-400 text-2xl font-extrabold rounded-md text-center bg-white  sm:text-sm placeholder:font-semibold outline-none focus:outline-none ${errors.description ? 'ring-red-500' : 'ring-transparent'}`}
+                                                className={`block w-full h-5 text-gray-400 text-2xl font-extrabold rounded-md text-center bg-white  sm:text-sm placeholder:font-semibold outline-none focus:outline-none ${errors.description ? 'ring-red-500' : 'ring-transparent'}`}
 
                                                 style={{ border: 'none' }}
                                             // Ensure no outline and border on focus
@@ -210,7 +240,6 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
                                     <div className='flex mt-5 gap-4 text-sm'>
                                         <span className='rounded-3xl border-orange-100 border-2 px-12 py-1 bg-gray-100 hover:bg-gray-200 cursor-pointer'>{date.toLocaleDateString()}</span>
                                         <span className='rounded-3xl border-orange-100 border-2 px-12 py-1 bg-gray-100 hover:bg-gray-200 cursor-pointer'>Add note/imags</span>
-
                                     </div>
 
                                 </div>
@@ -227,9 +256,10 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
                             setIsMultiple={(isMultiples) => setIsMultiple(isMultiples)}
                             openPayer={openPayer}
                             style={"top-28 right-12 "}
-                            userName={fields}
+                            userName={fieldSelectedUsersWithCurrentUser}
                             register={register}
                             currentUser={currentUser}
+                            selectedMembers={numberOfMembersWithCurrentUser}
                             errors={errors}
                             setOpenPayerUser={chooseOnePayer}
                             key="uniqueKey"
@@ -239,18 +269,22 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
 
                         {/* for Choose SpliteOption */}
                         {isSpliteOption && <ChooseSpliteOption
-                            selectedMembers={numberOfMembers}
+                            selectedMembers={numberOfMembersWithCurrentUser}
                             equalSplitAmount={equalSplitAmount}
                             onClose={() => setIsSpliteOption(false)}
                             isSpliteOption={isSpliteOption}
                             style='top-28 right-12'
                             setIsEqual={(any) => setIsEqual(any)}
-                            userName={fields}
+                            userName={fieldSelectedUsersWithCurrentUser}
                             ChooseSpliteOptionFunction={chooseOnePayer}
                             register={register}
-                            whoOwns={whoOwns}
+                            whoOwns={whoOwns}                         
                             currentUser={currentUser}
-                            errors={errors} />}
+                            errors={errors}
+                            multiplePayerPeople={multiplePayerPeople}
+                            onePayer={pickOnePayer}
+                            handleRetriveSpliteType={handleRetriveSpliteType}
+                            />}
 
                     </form>
                 </div>

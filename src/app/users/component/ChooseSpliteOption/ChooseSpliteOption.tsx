@@ -10,6 +10,8 @@ interface ChooseSpliteOptionProps {
     selectedMembers:number | string |any
     equalSplitAmount: number | string // Ensure it's a number
     onClose: () => void;
+    onePayer:any
+    multiplePayerPeople:any
     isSpliteOption: Boolean;
     style?: string;
     currentUser:User
@@ -18,10 +20,11 @@ interface ChooseSpliteOptionProps {
     errors: FieldErrors;
     userName: SimplifiedUser[]
     ChooseSpliteOptionFunction: (user: { userId: string; userName: string; PaidAmount: number, paidOwn?: string } | any) => void;
+    handleRetriveSpliteType:any |[]
 }
 const shareType = ["=", "1.23","%", "share", "+/-"]
 
-const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose,ChooseSpliteOptionFunction,currentUser, equalSplitAmount,isSpliteOption, style, errors, whoOwns,userName, register, setIsEqual,selectedMembers }) => {
+const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose,handleRetriveSpliteType,ChooseSpliteOptionFunction,currentUser, equalSplitAmount,isSpliteOption, style, errors, whoOwns,userName, register, setIsEqual,selectedMembers,onePayer,multiplePayerPeople }) => {
     const [activeOptionButton, setActiveOptionButton] = useState("=");
 
     const handleClick = (buttonIndex: any) => {
@@ -109,7 +112,10 @@ const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose,ChooseS
                     register={register}
                     activeOptionButton={activeOptionButton}
                     ChooseSpliteOptionFunction={ChooseSpliteOptionFunction}
-                    
+                    onePayer={onePayer}
+                    multiplePayerPeople={multiplePayerPeople}
+                    handleRetriveSpliteType={handleRetriveSpliteType}
+                    currentUser={currentUser}
                     />
                 </div>
             </div>

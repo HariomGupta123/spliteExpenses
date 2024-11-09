@@ -26,6 +26,7 @@ interface ChoosePayerProps {
     userName: SimplifiedUser[];
     setOpenPayerUser: (user: { userId: string; userName: string; PaidAmount: number, paidOwn?: string } | any) => void;
     currentUser: User
+    
 }
 
 const ChoosePayer: React.FC<ChoosePayerProps> = ({ onClose, openPayer, style, userName, register, errors, equalSplitAmount, setOpenPayerUser, currentUser, isMultiple, setIsMultiple, isChecked, setIsChecked }) => {
@@ -70,9 +71,9 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ onClose, openPayer, style, us
 
 
 
-    const handleInputChange = (value: number | string, index: number) => {
-        setValue(`people.${index}.paid`, value); // Dynamically update the value using setValue
-    };
+    const handleInputChange = React.useCallback((value: number | string, index: number) => {
+        setValue(`people.${index}.paid`, value);
+    }, [setValue]);
 
     return (
         <Model isOpen={openPayer} onClose={onClose} heading='Choose payer' style={style}>
@@ -124,7 +125,7 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ onClose, openPayer, style, us
                                                 errors={errors}
                                                 disabled={isChecked}
                                                 rupees="Rs"
-                                                style="w-full"
+                                                style="w-20"
                                                 defaultValue={currentPaid}
                                                 onChange={(event: any) => handleInputChange(event.target.value, index)}
                                             />

@@ -13,9 +13,16 @@ interface EquallyProps {
     isChecked:Boolean
     equalSplitAmount: number | string 
     ChooseSpliteOptionFunction?: (user: { userId: string; userName: string; PaidAmount: number, paidOwn?: string } | any) => void;
+    onePayer: any
+    selectedMembers: number | string | any
 
+    multiplePayerPeople: any
 }
-const Equally:React.FC<EquallyProps> = ({userName,register,errors,setIsChecked,isChecked,equalSplitAmount}) => {
+const Equally: React.FC<EquallyProps> = ({
+    selectedMembers, onePayer,multiplePayerPeople,userName,register,errors,setIsChecked,isChecked,equalSplitAmount}) => {
+        const handleselect=()=>{
+            
+        }
   return (
     <div>
           <div>
@@ -26,11 +33,10 @@ const Equally:React.FC<EquallyProps> = ({userName,register,errors,setIsChecked,i
                           return (
                               <div key={index} className=' flex  cursor-pointer w-full p-1 px-10 rounded-sm gap-4 hover:bg-slate-100 '>
                                   <Checkbox register={register} errors={errors} id={`string${index}`} type="checkbox" onChange={setIsChecked} />
-                                  <div className={clsx('flex gap-5 justify-center items-center', isChecked && "opacity-50 cursor-not- allowed")}>
+                                  <div className={clsx('flex gap-5 justify-center items-center', index && isChecked && "opacity-50 cursor-not- allowed")}>
                                       <UserAvatar usersName={user.name} /><div className='font-bold text-sm'>{equalSplitAmount}</div>
                                   </div>
-
-                              </div>
+                             </div>
                           );
                       })
                   ) : (

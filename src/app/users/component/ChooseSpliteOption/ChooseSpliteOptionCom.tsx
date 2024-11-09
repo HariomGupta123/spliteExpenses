@@ -10,6 +10,7 @@ import Shares from './Shares'
 import ExactAmount from './ExactAmount'
 import Percentage from './Percentage'
 import Equally from './Equally'
+import { User } from '@prisma/client'
 interface ChooseSpliteOptionComProps {
     selectedMembers: number
     userName: SimplifiedUser[]
@@ -18,25 +19,29 @@ interface ChooseSpliteOptionComProps {
     errors: FieldErrors;
     equalSplitAmount: number | string 
     ChooseSpliteOptionFunction: (user: { userId: string; userName: string; PaidAmount: number, paidOwn?: string } | any) => void;
+    onePayer: any
+    multiplePayerPeople: any
+    handleRetriveSpliteType:any|[]
+    currentUser:User
 
 }
-const ChooseSpliteOptionCom: React.FC<ChooseSpliteOptionComProps> = ({ userName,ChooseSpliteOptionFunction, activeOptionButton, register, errors,equalSplitAmount }) => {
+const ChooseSpliteOptionCom: React.FC<ChooseSpliteOptionComProps> = ({ currentUser,onePayer, selectedMembers, multiplePayerPeople, userName, ChooseSpliteOptionFunction, handleRetriveSpliteType, activeOptionButton, register, errors,equalSplitAmount }) => {
     const [isChecked, setIsChecked] = useState(false)
 
     return (
         <>
             {/* Split by exact amounts */}
-            {activeOptionButton === "=" && <Equally equalSplitAmount={equalSplitAmount} userName={userName} setIsChecked={()=>setIsChecked(true)} register={register} errors={errors} isChecked={isChecked}/>}
+            {activeOptionButton === "=" && <Equally onePayer={onePayer} multiplePayerPeople={multiplePayerPeople} equalSplitAmount={equalSplitAmount} userName={userName} setIsChecked={()=>setIsChecked(true)} register={register} errors={errors} isChecked={isChecked}/>}
 
             {/* //Split by exact amounts */}
-            {activeOptionButton === "1.23" && <ExactAmount userName={userName} register={register} errors={errors} />}
+            {activeOptionButton === "1.23" && <ExactAmount currentUser={currentUser} handleRetriveSpliteType={handleRetriveSpliteType} equalSplitAmount={equalSplitAmount} selectedMembers={selectedMembers} onePayer={onePayer} multiplePayerPeople={multiplePayerPeople} userName={userName} register={register} errors={errors} />}
 
             {/* Split by percentages */}
-            {activeOptionButton === "%" && <Percentage userName={userName} register={register} errors={errors}/>}
+            {activeOptionButton === "%" && <Percentage currentUser={currentUser} equalSplitAmount={equalSplitAmount} handleRetriveSpliteType={handleRetriveSpliteType} selectedMembers={selectedMembers} onePayer={onePayer} multiplePayerPeople={multiplePayerPeople} userName={userName} register={register} errors={errors}/>}
             {/* Split by shares */}
-            {activeOptionButton === "share" && <Shares userName={userName} register={register} errors={errors}/> }
+            {activeOptionButton === "share" && <Shares currentUser={currentUser} equalSplitAmount={equalSplitAmount} handleRetriveSpliteType={handleRetriveSpliteType}  selectedMembers={selectedMembers} onePayer={onePayer} multiplePayerPeople={multiplePayerPeople} userName={userName} register={register} errors={errors}/> }
             {/* Split by adjustment */}
-            {activeOptionButton === "+/-" && <Adjustment userName={userName} register={register} errors={errors}/>}
+            {activeOptionButton === "+/-" && <Adjustment equalSplitAmount={equalSplitAmount} selectedMembers={selectedMembers} onePayer={onePayer} multiplePayerPeople={multiplePayerPeople} userName={userName} register={register} errors={errors}/>}
 
         </>
     )

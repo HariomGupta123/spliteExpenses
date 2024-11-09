@@ -4,12 +4,12 @@ import MiddleInformation from './component/MiddleInformation'
 
 
 const users =async () => {
-  const users=await getUsers();
+  const Otherusers=await getUsers();
   const currentUser=await getCurrentUser()
-  const allUsers = currentUser ? [...users, currentUser] : users;
+  // const allUsers = currentUser ? [...otherUsers, currentUser] : users;
   return (
     <div className='w-full'>
-      <MiddleInformation users={allUsers} currentUser={currentUser}/>
+      <MiddleInformation users={Otherusers} currentUser={currentUser}/>
       jhjhjh
       
     </div>
