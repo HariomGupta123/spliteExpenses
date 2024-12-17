@@ -11,7 +11,7 @@ interface ChooseSpliteOptionProps {
     equalSplitAmount: number | string // Ensure it's a number
     onClose: () => void;
     onePayer:any
-    multiplePayerPeople:any
+    multiplePayerPeople?:any
     isSpliteOption: Boolean;
     style?: string;
     currentUser:User

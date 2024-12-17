@@ -11,7 +11,7 @@ interface ExactAmountProps {
     errors: FieldErrors;
     ChooseSpliteOptionFunction?: (user: { userId: string; userName: string; PaidAmount: number, paidOwn?: string } | any) => void;
     onePayer: any;
-    multiplePayerPeople: any;
+    multiplePayerPeople?: any;
     selectedMembers: number;
     equalSplitAmount: number | string;
     currentUser: User;

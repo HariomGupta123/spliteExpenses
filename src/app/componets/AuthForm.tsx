@@ -1,17 +1,23 @@
 "use client"
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Input from './Input/Input'
 import axios from 'axios'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import Button from './Button/Button'
 import { BsGithub, BsGoogle } from 'react-icons/bs'
 import AuthSocialButton from './Button/AuthSocialButton'
-import { signIn } from 'next-auth/react'
+import { getSession, signIn, useSession } from 'next-auth/react'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 type Variant = "LOGIN" | "REGISTER"
 const AuthForm = () => {
   const route=useRouter()
+  const session=useSession()
+  useEffect(() => {
+    if (session?.status === 'authenticated') {
+      route.push('/')
+    }
+  }, [session?.status, route]);
   const { register, handleSubmit, formState: { errors } } = useForm<FieldValues>({
     defaultValues: { name: "", email: "", password: "" }
   });
@@ -34,23 +40,24 @@ const AuthForm = () => {
        .catch(()=>toast("something went wrong"))
        .finally(()=>setLoading(false))
     }
-    if (variant == 'LOGIN') {
-      //
+    if (variant === 'LOGIN') {
+      setLoading(true);
       signIn('credentials', {
         ...data,
-        redirect: false
-      }).then((callback) => {
-        if (callback?.error) {
-          toast.error('Invalid creadentialss')
-        };
-
-        if (callback?.ok && !callback?.error) {
-          toast.success('Logged in!')
-          route.push("/users")
-        };
+        redirect: false,
       })
-        .finally(() => setLoading(false));
+        .then(async (callback) => {
+          if (callback?.error) {
+            toast.error('Invalid credentials');
+          }
 
+          if (callback?.ok && !callback?.error) {
+            await getSession(); // Ensure the session is updated
+            toast.success('Logged in!');
+            route.push('/users/dashboard');
+          }
+        })
+        .finally(() => setLoading(false));
     }
   }
   return (

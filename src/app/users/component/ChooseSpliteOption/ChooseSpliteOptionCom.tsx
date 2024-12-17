@@ -20,7 +20,7 @@ interface ChooseSpliteOptionComProps {
     equalSplitAmount: number | string 
     ChooseSpliteOptionFunction: (user: { userId: string; userName: string; PaidAmount: number, paidOwn?: string } | any) => void;
     onePayer: any
-    multiplePayerPeople: any
+    multiplePayerPeople?: any
     handleRetriveSpliteType:any|[]
     currentUser:User
 
@@ -31,7 +31,7 @@ const ChooseSpliteOptionCom: React.FC<ChooseSpliteOptionComProps> = ({ currentUs
     return (
         <>
             {/* Split by exact amounts */}
-            {activeOptionButton === "=" && <Equally onePayer={onePayer} multiplePayerPeople={multiplePayerPeople} equalSplitAmount={equalSplitAmount} userName={userName} setIsChecked={()=>setIsChecked(true)} register={register} errors={errors} isChecked={isChecked}/>}
+            {activeOptionButton === "=" && <Equally onePayer={onePayer} currentUser={currentUser} handleRetriveSpliteType={handleRetriveSpliteType} selectedMembers={selectedMembers} multiplePayerPeople={multiplePayerPeople} equalSplitAmount={equalSplitAmount} userName={userName} setIsChecked={()=>setIsChecked(true)} register={register} errors={errors} isChecked={isChecked}/>}
 
             {/* //Split by exact amounts */}
             {activeOptionButton === "1.23" && <ExactAmount currentUser={currentUser} handleRetriveSpliteType={handleRetriveSpliteType} equalSplitAmount={equalSplitAmount} selectedMembers={selectedMembers} onePayer={onePayer} multiplePayerPeople={multiplePayerPeople} userName={userName} register={register} errors={errors} />}

@@ -7,10 +7,10 @@ import axios from 'axios';
 import Image from 'next/image';
 import notes from "../../../../public/cardphoto.jpeg"
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { use, useEffect, useMemo, useState } from 'react';
 import { FieldValues, SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import AddedFriends from './ChoosePayer';
+import ChoosePayer from './ChoosePayer';
 import ChooseSpliteOption from './ChooseSpliteOption/ChooseSpliteOption';
 export interface FormData {
     people: {
@@ -34,7 +34,7 @@ interface AddExpenseProps {
     isOpen?: boolean; // corrected the type here
     onClose: () => void;
     users: User[] | null | undefined;
-    currentUser: User
+    currentUser: User | null
 }
 
 const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, currentUser }) => {
@@ -44,16 +44,18 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
             members: [], // This should be an array for multi-select
             amount: '',
             description: '',
-            people: [],
-            spliteOnPercentage:[]
+            // people: [{name:"",age:""}],
+    
         }
     });
     const amount = watch('amount')
     const [isMultiple, setIsMultiple] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
-    const [openPayer, setOpenPayer] = useState(false);
-    const [isEqual, setIsEqual] = useState(false)
+    const [isOpenPayer, setIsOpenPayer] = useState(false);
+    const [isEqual, setIsEqual] = useState(false);
+    const [MultiplePayers,setMultiplePayers]=useState<[]>([])
+    const [activePayer,setActivePayer]=useState<any>(currentUser.id)
     const [openPayerUser, setOpenPayerUser] = useState<person[] | []>([
         {
             userId: currentUser.id,
@@ -61,20 +63,26 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
             PaidAmount: amount
         }
     ]);
+    console.log("currentPayer",openPayerUser)
   // retriev Splite Type and involve people in splite type
     const [retriveSpliteType,setRetriveSpliteType]=useState<[]>([]);
-    console.log("retriveSpliteType",retriveSpliteType)
+    const retri=retriveSpliteType
+    console.log("retriveSpliteType", retri)
+
+    //all members start
     const [isSpliteOption, setIsSpliteOption] = useState(false)
     const members = watch('members'); // Watching the members field to update UI
     const router = useRouter();
     const date = new Date()
     const numberOfMembers = members.length;
+    console.log("members",members)
     const currentUsers=[currentUser]
     const currentUserLenght=currentUsers.length
     console.log("currentUsersLength:",currentUserLenght)
     const numberOfMembersWithCurrentUser=currentUserLenght ? (currentUserLenght+numberOfMembers) :currentUserLenght
     console.log("numberOfMembersWithCurrentUser", numberOfMembersWithCurrentUser)
     const equalSplitAmount = (numberOfMembersWithCurrentUser > 0 && amount) ? ((Number(amount) / numberOfMembersWithCurrentUser).toFixed(2)) : (0);
+    // selected user after comparing with all users from the database
     const useMemoToSelectedUsers = useMemo(() => {
         return users
             ?.filter((user: any) => members.some((member: any) => member.value === user.id))
@@ -83,38 +91,84 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
                 name: user.name
             })) || [];
     }, [users, members])
+   
+    //all members end 
+
     // Initialize people field in the form with selectedUsers
-    const { fields, append } = useFieldArray({
-        control,
-        name: "people"
-    });
-     console.log("fields:",fields)
-    const fieldSelectedUsersWithCurrentUser = currentUser ? [...fields, currentUser] : currentUser;
+    // const { fields, append } = useFieldArray({
+    //     control,
+    //     name: "people"
+    // });
+    
+    console.log(" useMemoToSelectedUsers from comparing with all users", useMemoToSelectedUsers)
+    const fieldSelectedUsersWithCurrentUser = currentUser ? [...useMemoToSelectedUsers, currentUser] : currentUser;
     console.log("fieldSelectedUsersWithCurrentUser", fieldSelectedUsersWithCurrentUser)
 
     // Automatically update the people array whenever selectedUsers changes
-    useEffect(() => {
-        // Get the current value of the "people" field
-        const currentPeople = getValues("people");
-        console.log("selected user:", useMemoToSelectedUsers)
+    // useEffect(() => {
+    //     // Get the current value of the "people" field
+    //     const currentPeople = getValues("people");
+    //     console.log("people",currentPeople)
+    //     console.log("selected user:", useMemoToSelectedUsers)
          
-        // Check if selectedUsers have actually changed
-        const hasChanged = useMemoToSelectedUsers.length !== currentPeople.length || useMemoToSelectedUsers.some((user, index) => user.id !== currentPeople[index]?.id);
-        console.log(hasChanged)
-        // Only update the "people" field if the useMemoToSelectedUsers have changed
-        if (hasChanged) {
-            setValue("people", useMemoToSelectedUsers.map(user => ({
-                id: user.id,
-                name: user.name,
-                paid: 0,// Initialize paid with 0
+    //     // Check if selectedUsers have actually changed
+    //     const hasChanged = useMemoToSelectedUsers.length !== currentPeople.length || useMemoToSelectedUsers.some((user, index) => user.id !== currentPeople[index]?.id);
+    //     console.log("hasChanged",hasChanged)
+    //     // Only update the "people" field if the useMemoToSelectedUsers have changed
+    //     if (hasChanged) {
+    //         setValue("people", useMemoToSelectedUsers.map(user => ({
+    //             id: user.id,
+    //             name: user.name,
+    //             paid: 0,// Initialize paid with 0
             
-            })));
-        }
-    }, [useMemoToSelectedUsers, setValue, getValues, isChecked]);
+    //         })));
+    //     }
+    // }, [useMemoToSelectedUsers, setValue, getValues, isChecked]);
     console.log("currentUser",currentUser)
+
+
+
+
+    //  multiple payers
+    const chooseMultiplePayer = (chooseMultiplePayer:any) => {
+        setMultiplePayers(chooseMultiplePayer); // Update the state with the new user data
+    };
+    console.log(" chooseMultiplePayer",MultiplePayers)
+    const chooseOnePayer = (newState: { userId: string, userName: string, PaidAmount: number, paidOwn?: string, kharchOnUser?: number | null | string }) => {
+        setOpenPayerUser([newState]); // Update the state with the new user data
+    };
+
+  console.log("chooseOnePayer",openPayerUser)
+
+    // splite type
+    const handleRetriveSpliteType=(retriveSpliteType:any)=>{
+        setRetriveSpliteType(retriveSpliteType);
+    }
+    console.log("percentageRRRRR:",retriveSpliteType)
+    console.log("numberOfPayer:", openPayerUser.length.valueOf)
+    const innerArray=[openPayerUser]
+    const lengthOfInnerArray = innerArray[0].length || 0; // Safe access with optional chaining
+    console.log("lengthOfInnerArray",lengthOfInnerArray); // Output: 2
+    const pickOnePayer = openPayerUser.map((user) => {
+        const currentUserName = user.userName === currentUser.name ? "you" : (user.userName ||"")
+        return currentUserName
+    }) ;
+
+    console.log("pickone",  pickOnePayer )
+    // setActivePayer(pickOnePayer)
+    // const memo=useMemo(()=>setActivePayer(pickOnePayer),[pickOnePayer])
+    useEffect(()=>{
+        
+        setActivePayer(pickOnePayer )},[])
+    const [selectedOwns, setSelectedOwns] = useState<string | number>(""); // To store the selected option
+
+    // Function passed to the child component
+    const whoOwns = (owns: string | number) => {
+        setSelectedOwns(owns); // Set the selected option from the child
+    };
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         setIsLoading(true);
-        expenseAmount: amount;
+        //  const {amount,description}=data
         // const PaidUserToExpensesAmount=users?.filter((user)=>user.id ===payerUserId);
         // if(paidUserToExensesAmount.length == 1){
         // payerId:PaidUserToExpensesAmount
@@ -122,8 +176,19 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
         // toGiverId:user.id,
         //  toGiveAmount:equalSplitedAmount}))
         // }
+       if(MultiplePayers){
+           // axios.post('/api/group', { ...data, isGroup: true })
+           {
+            amount:data.amount;
+            discriptions:data.decriptions;
+            totalPayers:MultiplePayers
+           }
+       }else{
+        if(openPayerUser){
 
-
+        }
+       }
+        
         PaidUserToExpensesAmount: ;
         console.log("Form data:", data);
         console.log("Amount:", amount);
@@ -137,43 +202,6 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
         //     .catch(() => toast.error('Something went wrong'))
         //     .finally(() => setIsLoading(false));
     };
-
-
-
-    //  multiple payers
-    const multiplePayerPeople = getValues("people");
-    console.log("paidPeople:",multiplePayerPeople); 
-
-    const chooseOnePayer = (newState: { userId: string, userName: string, PaidAmount: number, paidOwn?: string, kharchOnUser?: number | null | string }) => {
-        setOpenPayerUser([newState]); // Update the state with the new user data
-    };
-    console.log("openOnePayerUser", openPayerUser)
-
-
-    // splite type
-    const handleRetriveSpliteType=(retriveSpliteType:any)=>{
-        setRetriveSpliteType(retriveSpliteType)
-    }
-    console.log("percentageRRRRR:",retriveSpliteType)
-    console.log("numberOfPayer:", openPayerUser.length.valueOf)
-    const innerArray=[openPayerUser]
-    const lengthOfInnerArray = innerArray[0].length || 0; // Safe access with optional chaining
-    console.log("lengthOfInnerArray",lengthOfInnerArray); // Output: 2
-    const pickOnePayer = openPayerUser.map((user) => {
-        const currentUserName = user.userName === currentUser.name ? "you" : user.userName
-        return currentUserName
-    }) ;
-
-    console.log("pickone",  pickOnePayer )
-    const [selectedOwns, setSelectedOwns] = useState<string | number>(""); // To store the selected option
-
-    // Function passed to the child component
-    const whoOwns = (owns: string | number) => {
-        setSelectedOwns(owns); // Set the selected option from the child
-    };
-
-
-
     return (
         <>
             <Model isOpen={isOpen} onClose={onClose} heading='Add an Expenses' >
@@ -229,10 +257,10 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
                                     </div>
                                     <div className="mt-5 text-center flex row-2 gap-2 ">
                                         {selectedOwns ? (selectedOwns ==="Splite the Expenses"  ? (<><span className='text-sm'>
-                                            Paid by <span className='bg-gray-100 hover:bg-gray-200 rounded-xl  px-2 border-dashed border-2 border-orange-300 cursor-pointer' onClick={() => setOpenPayer(true)}>{isMultiple ? "multiple" : pickOnePayer}</span> and splite <span className='bg-gray-100 hover:bg-gray-200 rounded-xl  px-2 border-dashed border-2 border-orange-300 cursor-pointer' onClick={() => setIsSpliteOption(true)}>{isEqual ? "unEqually" : "Equally"}</span>
+                                            Paid by <span className='bg-gray-100 hover:bg-gray-200 rounded-xl  px-2 border-dashed border-2 border-orange-300 cursor-pointer' onClick={() => setIsOpenPayer(true)}>{isMultiple ? "multiple" : pickOnePayer}</span> and splite <span className='bg-gray-100 hover:bg-gray-200 rounded-xl  px-2 border-dashed border-2 border-orange-300 cursor-pointer' onClick={() => setIsSpliteOption(true)}>{isEqual ? "unEqually" : "Equally"}</span>
                                         </span>
                                             <span className='text-sm'>  (({equalSplitAmount})/per)</span> </>) : (<span>{selectedOwns}</span>)) : <><span className='text-sm'>
-                                                Paid by <span className='bg-gray-100 hover:bg-gray-200 rounded-xl  px-2 border-dashed border-2 border-orange-300 cursor-pointer' onClick={() => setOpenPayer(true)}>{isMultiple ? "multiple" : pickOnePayer}</span> and splite <span className='bg-gray-100 hover:bg-gray-200 rounded-xl  px-2 border-dashed border-2 border-orange-300 cursor-pointer' onClick={() => setIsSpliteOption(true)}>{isEqual ? "unEqually" : "Equally"}</span>
+                                                Paid by <span className='bg-gray-100 hover:bg-gray-200 rounded-xl  px-2 border-dashed border-2 border-orange-300 cursor-pointer' onClick={() => setIsOpenPayer(true)}>{isMultiple ? "multiple" : pickOnePayer}</span> and splite <span className='bg-gray-100 hover:bg-gray-200 rounded-xl  px-2 border-dashed border-2 border-orange-300 cursor-pointer' onClick={() => setIsSpliteOption(true)}>{isEqual ? "unEqually" : "Equally"}</span>
                                             </span>
                                             <span className='text-sm'>  (({equalSplitAmount})/per)</span> </> }
                                        
@@ -250,18 +278,21 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
                             <Button disabled={isLoading} type="submit" >Create</Button>
                         </div>
 
-                        {openPayer && <AddedFriends
-                            onClose={() => setOpenPayer(false)}
+                        {   isOpenPayer && <ChoosePayer
+                            activePayer={activePayer}
+                            setActivePayer={setActivePayer}
+                            onClose={() => setIsOpenPayer(false)}
                             isMultiple={isMultiple}
                             setIsMultiple={(isMultiples) => setIsMultiple(isMultiples)}
-                            openPayer={openPayer}
+                            openPayer={isOpenPayer}
                             style={"top-28 right-12 "}
                             userName={fieldSelectedUsersWithCurrentUser}
                             register={register}
                             currentUser={currentUser}
                             selectedMembers={numberOfMembersWithCurrentUser}
                             errors={errors}
-                            setOpenPayerUser={chooseOnePayer}
+                            chooseOnePayer={chooseOnePayer}
+                            chooseMultiplePayer={chooseMultiplePayer}
                             key="uniqueKey"
                             equalSplitAmount={equalSplitAmount}
                             setIsChecked={() => setIsChecked(!isChecked)}
@@ -281,7 +312,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
                             whoOwns={whoOwns}                         
                             currentUser={currentUser}
                             errors={errors}
-                            multiplePayerPeople={multiplePayerPeople}
+                           
                             onePayer={pickOnePayer}
                             handleRetriveSpliteType={handleRetriveSpliteType}
                             />}

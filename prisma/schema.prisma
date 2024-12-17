@@ -16,10 +16,12 @@ model User {
   hashedPassword String?
   createdAt      DateTime       @default(now())
   updated        DateTime       @updatedAt
-  
+  kharchOnUserInAmount  Float?
   // The expenses created by this user
   expenses       Expense[]      @relation("ExpenseCreator")
-  
+  //involve people in expese
+  involepeople   Expense[]     @relation("ExpenseInvolvePeople",fields: [involvePeopleIds],references: [id])
+  involvePeopleIds   String[]           @db.ObjectId
   // The expenses this user paid for
   expensesPaid   Expense[]      @relation("ExpensePayer", fields: [expensesPaidId], references: [id])
   expensesPaidId String[]       @db.ObjectId
@@ -28,6 +30,9 @@ model User {
   
   expenseSplits  ExpenseSplit[]
   giveTakeAmount GiveTakeAmount[]  // Updated model name for consistency
+    giveTakeGiver  GiveTakeAmount[]  @relation("GiveTake_Giver") // Opposite relation for giverUser
+
+  // invitations Invitation[]
 }
 
 model Group {
@@ -45,15 +50,20 @@ model Expense {
   description   String
   amount        Float
   createdAt     DateTime     @default(now())
+  spliteType    String
   equalSplit    Boolean?     // Fixed spelling
   unequalSplit  Boolean?     // Fixed spelling
   createdBy     User         @relation("ExpenseCreator", fields: [createdById], references: [id])
   createdById   String       @db.ObjectId 
   paidBy        User[]       @relation("ExpensePayer", fields: [paidByIds], references: [id])
   paidByIds     String[]     @db.ObjectId
-  group         Group        @relation(fields: [groupId], references: [id])
-  groupId       String       @db.ObjectId
+  involvePeopleOncharch User[] @relation("ExpenseInvolvePeople", fields: [involvePeopleOncharchIds], references: [id])
+  involvePeopleOncharchIds     String[]     @db.ObjectId
+  group         Group?      @relation(fields: [groupId], references: [id])
+  groupId       String?       @db.ObjectId
   splits        ExpenseSplit[]
+  giveTakeAmount GiveTakeAmount[]
+  getBackAmount Float
 }
 
 model ExpenseSplit {
@@ -66,12 +76,46 @@ model ExpenseSplit {
   returnBackAmount Float?   // Fixed spelling
 }
 
-model GiveTakeAmount { // Updated model name to be consistent
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  user        User         @relation(fields: [receiverId], references: [id])
-  receiverId      String       @db.ObjectId
-  giverId      String[]     
-  paidAmount  Float?
+// model GiveTakeAmount { // Updated model name to be consistent
+//   id          String       @id @default(auto()) @map("_id") @db.ObjectId
+//   receiverUser        User         @relation(fields: [receiverId], references: [id])
+//   receiverId      String       @db.ObjectId
+//   giverId      String      @db.ObjectId
+//   giverUser    User      @relation("giverUser",fields: [giverId],references: [id])
+//   paidAmount  Float?
+//   spliteType    String
+//   toGiveInType  String?
+//   toRecieveAmount  Float?
+//   toGiveAmount  Float?       // Fixed spelling
+//   expense     Expense      @relation(fields: [expenseId], references: [id])
+//   expenseId   String       @db.ObjectId
+// }
+model GiveTakeAmount {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  receiverUser     User      @relation(fields: [receiverId], references: [id])
+  receiverId       String    @db.ObjectId
+  giverUser        User      @relation("GiveTake_Giver", fields: [giverId], references: [id]) // Changed from User[] to User
+  giverId          String    @db.ObjectId // Changed from String[] to String
+  paidAmount       Float?
+  spliteType       String
+  toGiveInType     String?
   toRecieveAmount  Float?
-  toGiveAmount  Float?       // Fixed spelling
+  toGiveAmount     Float?
+  expense          Expense   @relation(fields: [expenseId], references: [id])
+  expenseId        String    @db.ObjectId
 }
+
+
+model Invitation {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  token     String   @unique
+  email     String
+  senderId  String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  isUsed    Boolean  @default(false)
+  // userId    String   @db.ObjectId
+  // user      User     @relation(fields: [userId], references: [id])
+}
+
+

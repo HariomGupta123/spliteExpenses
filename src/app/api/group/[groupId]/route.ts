@@ -15,11 +15,11 @@ export async function POST(request: Request) {
         const newUser = request.body
 
         const currentUser = await getCurrentUser();
-        if (!currentUser) {
-            return new NextResponse("Unauthorized", { status: 401 });
-        }
+        // if (!currentUser) {
+        //     return new NextResponse("Unauthorized", { status: 401 });
+        // }
 
-        console.log("Logged in user:", currentUser.email);
+        // console.log("Logged in user:", currentUser.email);
         const body = await request.json();
         const { groupId, description, amount, paidById, EqualSplite, splits, paidAmount } = body;
 

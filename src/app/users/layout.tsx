@@ -1,33 +1,39 @@
-import React from 'react'
-import Userlist from './component/Userlist'
+import React from 'react';
+import Userlist from './component/Userlist';
 import { getUsers } from '../actions/getUsers';
 import getCurrentUser from '../actions/getCurrentUser';
 import Header from './component/Header/Header';
+import LeftSide from './LeftSide/leftSide';
+import SideBar from './SideBar/SideBar';
 
-const Userlayout =async ({children}:{children:React.ReactNode}) => {
+const Userlayout = async ({ children }: { children: React.ReactNode }) => {
   const Users = await getUsers();
-  const currentUser=await getCurrentUser()
-  const withCurrentUser=[...Users,currentUser]
-  return (
-    <div>
-      <div className='sticky z-10 top-0'>
-        <Header />
-      </div>
-     
-      <div className='w-full flex h-[100vh]'>
-        <div className='flex-grow h-full'>
-          <Userlist item={withCurrentUser} email={currentUser?.email} />
-        </div>
-        <div className='flex-grow flex z-5  border-l border-r border-black shadow-lg  '>
-          {children}
-         </div>
-        <div className='flex-grow flex justify-center '>
-          lskj;lsaljdalks
-         </div>
-       
-      </div>
-    </div>
-  )
-}
+  // const currentUser = await getCurrentUser();
 
-export default Userlayout
+  return (
+    <div className="h-screen flex flex-col">
+      <SideBar>
+        <div className="flex flex-col md:flex-row h-full">
+          {/* Left Side */}
+          <div className="hidden md:flex md:w-1/4 lg:w-1/5 border-r border-gray-300 shadow-md">
+            <LeftSide />
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-grow flex flex-col md:w-1/2 lg:w-3/5 border-l border-r border-gray-300 shadow-lg">
+            {children}
+          </div>
+
+          {/* Right Side */}
+          <div className="hidden md:flex md:w-1/4 lg:w-1/5 border-l border-gray-300 shadow-md">
+            <div className="flex-grow flex justify-start items-center p-4">
+              <span className="text-gray-500">Content for the right side</span>
+            </div>
+          </div>
+        </div>
+      </SideBar>
+    </div>
+  );
+};
+
+export default Userlayout;

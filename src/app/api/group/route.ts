@@ -9,11 +9,11 @@ export async function POST(request: Request) {
     const currentUser = await getCurrentUser();
     const session = await getSession();
 
-    console.log("login user", session?.user?.email);
+    // console.log("login user", session?.user?.email);
 
-    if (!session?.user?.email) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
+    // if (!session?.user?.email) {
+    //   return new NextResponse("Unauthorized", { status: 401 });
+    // }
 
     const body = await request.json();
     const {groupName,memberEmail } = body;

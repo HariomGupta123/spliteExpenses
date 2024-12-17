@@ -1,32 +1,22 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "./prismadb";
-import GithubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 import { NextAuthOptions } from "next-auth";
-import { User } from "@prisma/client"; // Assuming you're using Prisma for the user model
 import { JWT } from "next-auth/jwt";
-export const authOptions:NextAuthOptions = {
+import CredentialsProvider from "next-auth/providers/credentials";
+
+export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    }),
     CredentialsProvider({
-      name: "credentials",
+      name: "Credentials",
       credentials: {
-        email: { label: "email", type: "text" },
-        password: { label: "password", type: "password" },
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("Invalid credentials");
+          throw new Error("Missing email or password");
         }
 
         const user = await prisma.user.findUnique({
@@ -34,16 +24,13 @@ export const authOptions:NextAuthOptions = {
         });
 
         if (!user || !user.hashedPassword) {
-          throw new Error("Invalid credentials");
+          throw new Error("Invalid email or password");
         }
 
-        const isCorrectPassword = await bcrypt.compare(
-          credentials.password,
-          user.hashedPassword
-        );
+        const isCorrectPassword = await bcrypt.compare(credentials.password, user.hashedPassword);
 
         if (!isCorrectPassword) {
-          throw new Error("Invalid credentials");
+          throw new Error("Invalid email or password");
         }
 
         return user;
@@ -54,18 +41,17 @@ export const authOptions:NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: User | any }) {
+    async jwt({ token, user }: { token: JWT; user?: any }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
       }
-      console.log("JWT Token:", token);
       return token;
     },
-    
     async session({ session, token }: { session: any; token: JWT }) {
       if (token.id) {
         session.user.id = token.id;
+        session.user.email = token.email;
       }
       return session;
     },

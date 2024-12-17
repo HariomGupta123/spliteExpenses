@@ -15,7 +15,7 @@ interface PercentageProps {
         user: { userId: string; userName: string; PaidAmount: number; paidOwn?: string } | any
     ) => void;
     onePayer: any;
-    multiplePayerPeople: any;
+    multiplePayerPeople?: any;
     handleRetriveSpliteType: (anyThing: any) => void;
     currentUser: User;
 }

@@ -11,7 +11,7 @@ interface ShareProps {
     errors: FieldErrors;
     ChooseSpliteOptionFunction?: (user: { userId: string; userName: string; PaidAmount: number, paidOwn?: string } | any) => void;
     onePayer: any;
-    multiplePayerPeople: any;
+    multiplePayerPeople?: any;
     equalSplitAmount: number | string;
     selectedMembers: number;
     handleRetriveSpliteType: any;

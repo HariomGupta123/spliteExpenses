@@ -4,6 +4,8 @@ import "./globals.css";
 import ContextsToaster from "./contexts/ContextsToaster";
 import AuthContext from "./contexts/AuthContext";
 
+import QueryClientProviderWrapper from "./contexts/QueryClientContext";
+
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
 //   variable: "--font-geist-sans",
@@ -26,11 +28,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    
     <html lang="en">
       <body>
         <AuthContext>
           <ContextsToaster />
-          {children}
+          <QueryClientProviderWrapper>
+            {children}
+          </QueryClientProviderWrapper>
         </AuthContext>
       </body>
     </html>
