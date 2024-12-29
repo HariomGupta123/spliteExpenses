@@ -35,7 +35,6 @@ interface ChoosePayerProps {
 const ChoosePayer: React.FC<ChoosePayerProps> = ({ activePayer,setActivePayer,onClose, openPayer, style, userName, register, errors, equalSplitAmount, chooseOnePayer,chooseMultiplePayer, currentUser, isMultiple, setIsMultiple }) => {
 
     const { setValue, control, watch, handleSubmit,reset } = useForm();
-    // const people = useWatch({ control, name: 'people' }) || []; // Watch the values for the people array
     const watchedPeople = useWatch({ control, name: 'people' });
 
     const [people, setAxactAmount] = useState(watchedPeople || []);

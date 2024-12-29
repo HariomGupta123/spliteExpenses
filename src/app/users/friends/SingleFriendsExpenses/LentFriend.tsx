@@ -12,7 +12,7 @@ const LentFriend: React.FC<LentFriendProps> = ({ lentFriend, paidBy, userId, amo
     // const {expenses,isError,isLoading}=useExpenseData()
     // console.log("lentFrieds",expenses)
     const paidUser = lentFriend.filter((paid: any) => paid.id === userId)
-    console.log("userId", lentFriend)
+    console.log("lentFriend", lentFriend)
     return (
         <>
             {lentFriend.map((lent: any, index: number) => {

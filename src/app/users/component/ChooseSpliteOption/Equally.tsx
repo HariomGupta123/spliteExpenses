@@ -71,7 +71,7 @@ const Equally: React.FC<EquallyProps> = ({
         const involvedUsersListWithspliteAmount = involvedUsersList.map((user) => ({ ...user, kharchOnUserInAmount: splitAmount }));
         const currentUserId = involvedUsersListWithspliteAmount.some((user) => user.id === currentUser.id);
 
-        const newExactAmountSendToDatabase = [{
+        const newExactAmountSendToDatabase = {
             description: "something for exactAmount",
             expensesAmount: amount * selectedMembers,
             onePayer: onePayer[0] === 'you' ? currentUser?.name : onePayer[0],
@@ -79,7 +79,7 @@ const Equally: React.FC<EquallyProps> = ({
             spliteType: "equally",
             involvePeopleOnKharch: involvedUsersListWithspliteAmount,
             getBackAmount: currentUserId ? (involvedUsersList.length - 1) * splitAmount : involvedUsersList.length * splitAmount
-        }];
+        };
 
         // Only update if `newExactAmountSendToDatabase` has actually changed
         if (JSON.stringify(newExactAmountSendToDatabase) !== JSON.stringify(exactAmountSendToDatabase)) {

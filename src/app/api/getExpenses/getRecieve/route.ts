@@ -25,6 +25,8 @@ export async function GET() {
                   amount:true,
                   description:true,
                   paidByIds:true,
+                  createdAt:true,
+                  createdBy:true,
                 involvePeopleOncharch: {
                     select: {
                         id: true,

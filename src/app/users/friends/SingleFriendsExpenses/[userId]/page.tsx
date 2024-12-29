@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import LentFriend from "../LentFriend";
 import { useExpenseByUserId } from "@/app/users/getExpenses/GetExpensesByUserId";
 import { useParams } from "next/navigation";
-import ExpenseDetail from "../ExpenseDetials";
 import { useExpenseData } from "@/app/users/getExpenses/GetExpenses";
+import Detials from "../Detials";
+import ExpenseDetail from "../ExpenseDetial";
 
 const TransactionList = () => {
     const router = useParams();
@@ -45,28 +45,19 @@ const TransactionList = () => {
     return (
         <>
             {expensesByUserId.map((transaction: any) => (
-                <div key={transaction.id} className="bg-gray-100 p-2 space-y-4 cursor-pointer">
-                    <div
-                        onClick={() => handleFilteredExpenses(transaction.id)}
-                        className="flex items-center bg-white shadow-sm rounded-lg p-2 border text-sm font-normal gap-4"
-                    >
-                        <div className="flex-shrink-0 text-center w-16">
-                            <div className="text-xs font-extralight text-gray-800">
-                                {formatDate(transaction.createdAt)}
-                            </div>
-                            <div className="text-xs text-gray-400">{transaction.month}</div>
-                        </div>
-                        <span className="border bg-slate-300 rounded-md w-[40px] h-[40px]"></span>
-                        <div className="font-normal text-gray-800">{transaction.description}</div>
-                        <div className="ml-4 flex-1 flex gap-10">
-                            <LentFriend
-                                lentFriend={transaction.giveTakeAmount}
-                                paidBy={transaction.paidBy}
-                                userId={userId}
-                                amount={transaction.amount}
-                            />
-                        </div>
-                    </div>
+                <div
+                    onClick={() => handleFilteredExpenses(transaction.id)}
+
+                    key={transaction.id} className="bg-gray-100 p-2 space-y-4 cursor-pointer">
+                    <Detials
+                        formateDate={formatDate(transaction.createdAt)}
+                        transactionDescription={transaction.description}
+                        transactionMonth={transaction.month}
+                        transactionamount={transaction.amount}
+                        transactiongiveTakeAmount={transaction.giveTakeAmount}
+                        userId={userId}
+                        transactionpaidBy={transaction.paidBy}
+                    />
 
                     {/* Conditional rendering of ExpenseDetail */}
                     {selectedId === transaction.id && <ExpenseDetail expenseDetial={filteredExpense} />}

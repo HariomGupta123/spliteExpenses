@@ -18,7 +18,7 @@ const OwedYou: React.FC<OwedYouProps> = ({ incoming }) => {
 
 
 const sigleFriendDetial=(userId:string)=>{
-    route.push(`/friends/SingleFriendsExpenses/${userId}`)
+    route.push(`friends/SingleFriendsExpenses/${userId}`)
 
 
 }

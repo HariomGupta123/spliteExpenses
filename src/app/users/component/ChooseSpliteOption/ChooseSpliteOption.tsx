@@ -4,6 +4,7 @@ import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
 import ChooseSpliteOptionCom from './ChooseSpliteOptionCom';
 import { SimplifiedUser } from '../AddExpense';
 import { User } from '@prisma/client';
+import { expenseDetial } from '@/app/type/type';
 
 interface ChooseSpliteOptionProps {
     register: UseFormRegister<FieldValues>;
@@ -20,7 +21,7 @@ interface ChooseSpliteOptionProps {
     errors: FieldErrors;
     userName: SimplifiedUser[]
     ChooseSpliteOptionFunction: (user: { userId: string; userName: string; PaidAmount: number, paidOwn?: string } | any) => void;
-    handleRetriveSpliteType:any |[]
+    handleRetriveSpliteType:expenseDetial |[]
 }
 const shareType = ["=", "1.23","%", "share", "+/-"]
 

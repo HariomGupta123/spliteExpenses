@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import React, { useMemo, useState } from 'react';
-import EmailInvitationForm from '../inviteFriends/invite';
+import EmailInvitationForm from '../../inviteFriends/invite';
 import { FaUser } from 'react-icons/fa';
 import Model from '@/app/componets/Model/Model';
 
@@ -75,7 +75,7 @@ const Page = () => {
                         {usersByEmail.map((user) => (
                             <Link
                                 key={user.id}
-                                href={`/friends/${user.id}`}
+                                href={`/users/friends/SingleFriendsExpenses/${user.id}`}
                                 className="flex items-center pl-2 mt-2 pt-1 rounded-md hover:bg-gray-50 transition"
                             >
                                 <FaUser className="text-gray-500 mr-1" />

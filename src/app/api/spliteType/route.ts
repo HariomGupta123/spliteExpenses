@@ -28,7 +28,19 @@ export async function POST(request: Request) {
         } = body;
 
         // Validate required fields
-        if (!description || !amount || !paidBy || !spliteType) {
+        console.log("amount",amount)
+        console.log("involvePeople",  description,
+            amount,
+            paidBy,
+            involvePeopleOncharch,
+            EqualSplite,
+            "getBack",
+            getBackAmount,
+            spliteType,
+            createdBy,
+            toGiveInType)
+        console.log("getBack amount",getBackAmount)
+        if (!description || !amount  || !spliteType) {
             return new NextResponse("Missing required fields", { status: 400 });
         }
 
@@ -57,6 +69,7 @@ export async function POST(request: Request) {
                                 receiverId: paidBy[0], // Single string, not an array
                                 giverId: [user.id], // Array is valid as `giverId` is `String[]`
                                 toGiveAmount: user.kharchOnUserInAmount,
+
                             })),
                     },
                 },

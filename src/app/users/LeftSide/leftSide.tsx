@@ -2,15 +2,15 @@
 import React, { useState } from "react";
 import EmailInvitationForm from "@/app/inviteFriends/invite";
 import Link from "next/link";
-import Page from "@/app/friends/page";
+import Page from "../friends/page";
 
 const LeftSide = () => {
     const [activeIndex, setActiveIndex] = useState(0); // State to track active item
 
     const menuItems = [
         { name: "Dashboard", path: "/users/dashboard", component: <div>Dashboard Component</div> },
-        { name: "Recent Activities", path: "/activities", component: <div>Recent Activities Component</div> },
-        { name: "All Expenses", path: "/expenses", component: <div>All Expenses Component</div> },
+        { name: "Recent Activities", path: "/users/recentActivities", component: <div>Recent Activities Component</div> },
+        { name: "All Expenses", path: "/users/allExpenses", component: <div>All Expenses Component</div> },
         // { name: "Add friend", path: "", component: <Page/> },
 
         // { name: "Add Group", path: "/add-group", component: <div>Add Group Component</div> },

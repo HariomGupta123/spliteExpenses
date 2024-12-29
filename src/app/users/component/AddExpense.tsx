@@ -12,11 +12,13 @@ import { FieldValues, SubmitHandler, useFieldArray, useForm } from 'react-hook-f
 import toast from 'react-hot-toast';
 import ChoosePayer from './ChoosePayer';
 import ChooseSpliteOption from './ChooseSpliteOption/ChooseSpliteOption';
+import { expenseDetial} from '@/app/type/type';
 export interface FormData {
     people: {
         paid: number;
     }[];
 }
+
 export interface SimplifiedUser {
     id: string;
     name?: string;
@@ -55,17 +57,17 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
     const [isOpenPayer, setIsOpenPayer] = useState(false);
     const [isEqual, setIsEqual] = useState(false);
     const [MultiplePayers,setMultiplePayers]=useState<[]>([])
-    const [activePayer,setActivePayer]=useState<any>(currentUser.id)
-    const [openPayerUser, setOpenPayerUser] = useState<person[] | []>([
+    const [activePayer,setActivePayer]=useState<any>(currentUser?.id)
+    const [payerUser, setpayerUser] = useState<person[] | []>([
         {
             userId: currentUser.id,
             userName: currentUser.name,
             PaidAmount: amount
         }
     ]);
-    console.log("currentPayer",openPayerUser)
+    console.log("currentPayer",payerUser)
   // retriev Splite Type and involve people in splite type
-    const [retriveSpliteType,setRetriveSpliteType]=useState<[]>([]);
+    const [retriveSpliteType,setRetriveSpliteType]=useState< expenseDetial | null>(null);
     const retri=retriveSpliteType
     console.log("retriveSpliteType", retri)
 
@@ -92,38 +94,13 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
             })) || [];
     }, [users, members])
    
-    //all members end 
-
-    // Initialize people field in the form with selectedUsers
-    // const { fields, append } = useFieldArray({
-    //     control,
-    //     name: "people"
-    // });
+ 
     
     console.log(" useMemoToSelectedUsers from comparing with all users", useMemoToSelectedUsers)
     const fieldSelectedUsersWithCurrentUser = currentUser ? [...useMemoToSelectedUsers, currentUser] : currentUser;
     console.log("fieldSelectedUsersWithCurrentUser", fieldSelectedUsersWithCurrentUser)
 
-    // Automatically update the people array whenever selectedUsers changes
-    // useEffect(() => {
-    //     // Get the current value of the "people" field
-    //     const currentPeople = getValues("people");
-    //     console.log("people",currentPeople)
-    //     console.log("selected user:", useMemoToSelectedUsers)
-         
-    //     // Check if selectedUsers have actually changed
-    //     const hasChanged = useMemoToSelectedUsers.length !== currentPeople.length || useMemoToSelectedUsers.some((user, index) => user.id !== currentPeople[index]?.id);
-    //     console.log("hasChanged",hasChanged)
-    //     // Only update the "people" field if the useMemoToSelectedUsers have changed
-    //     if (hasChanged) {
-    //         setValue("people", useMemoToSelectedUsers.map(user => ({
-    //             id: user.id,
-    //             name: user.name,
-    //             paid: 0,// Initialize paid with 0
-            
-    //         })));
-    //     }
-    // }, [useMemoToSelectedUsers, setValue, getValues, isChecked]);
+  
     console.log("currentUser",currentUser)
 
 
@@ -135,28 +112,26 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
     };
     console.log(" chooseMultiplePayer",MultiplePayers)
     const chooseOnePayer = (newState: { userId: string, userName: string, PaidAmount: number, paidOwn?: string, kharchOnUser?: number | null | string }) => {
-        setOpenPayerUser([newState]); // Update the state with the new user data
+        setpayerUser([newState]); // Update the state with the new user data
     };
 
-  console.log("chooseOnePayer",openPayerUser)
+  console.log("chooseOnePayer",payerUser)
 
     // splite type
-    const handleRetriveSpliteType=(retriveSpliteType:any)=>{
+    const handleRetriveSpliteType=(retriveSpliteType:expenseDetial)=>{
         setRetriveSpliteType(retriveSpliteType);
     }
     console.log("percentageRRRRR:",retriveSpliteType)
-    console.log("numberOfPayer:", openPayerUser.length.valueOf)
-    const innerArray=[openPayerUser]
+    console.log("numberOfPayer:", payerUser.length.valueOf)
+    const innerArray=[payerUser]
     const lengthOfInnerArray = innerArray[0].length || 0; // Safe access with optional chaining
     console.log("lengthOfInnerArray",lengthOfInnerArray); // Output: 2
-    const pickOnePayer = openPayerUser.map((user) => {
-        const currentUserName = user.userName === currentUser.name ? "you" : (user.userName ||"")
+    const pickOnePayer = payerUser.map((user) => {
+        const currentUserName = user.userName === currentUser?.name ? "you" : (user.userName ||"")
         return currentUserName
     }) ;
 
     console.log("pickone",  pickOnePayer )
-    // setActivePayer(pickOnePayer)
-    // const memo=useMemo(()=>setActivePayer(pickOnePayer),[pickOnePayer])
     useEffect(()=>{
         
         setActivePayer(pickOnePayer )},[])
@@ -166,16 +141,44 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
     const whoOwns = (owns: string | number) => {
         setSelectedOwns(owns); // Set the selected option from the child
     };
-    const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    const onSubmit: SubmitHandler<FieldValues> =async (data) => {
+        // description,
+        //     amount,
+        //     paidBy,
+        //     involvePeopleOncharch,
+        //     EqualSplite,
+        //     getBackAmount,
+
+        //     spliteType,
+        //     createdBy,
+        //     toGiveInType
         setIsLoading(true);
-        //  const {amount,description}=data
-        // const PaidUserToExpensesAmount=users?.filter((user)=>user.id ===payerUserId);
-        // if(paidUserToExensesAmount.length == 1){
-        // payerId:PaidUserToExpensesAmount
-        //   toGiversId:useMemoToSelectedUsers.filter((user)=>({
-        // toGiverId:user.id,
-        //  toGiveAmount:equalSplitedAmount}))
-        // }
+
+        const { description, amount } = data
+       
+        try {
+            const response = await axios.post("/api/spliteType", {
+                description: description,
+                amount:  parseFloat(amount),
+                paidBy: [retriveSpliteType?.onePayerId],
+                involvePeopleOncharch: retriveSpliteType?.involvePeopleOnKharch,
+                EqualSplite:isLoading,
+                createdBy: currentUser?.id,
+                getBackAmount: retriveSpliteType?.getBackAmount,
+                toGiveInType: "equally",
+                 spliteType:"equallyiii"
+               
+            });
+            console.log("Expense created successfully:", response.data);
+            toast("expenses created successfully")
+            setIsLoading(false)
+        } catch (error) {
+            console.error("Error creating expense:", error);
+            setIsLoading(false)
+            toast("something went wrong")
+        }
+     
+      
        if(MultiplePayers){
            // axios.post('/api/group', { ...data, isGroup: true })
            {
@@ -184,7 +187,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
             totalPayers:MultiplePayers
            }
        }else{
-        if(openPayerUser){
+        if(payerUser){
 
         }
        }
@@ -194,13 +197,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
         console.log("Amount:", amount);
         console.log("Members:", members);
 
-        // axios.post('/api/group', { ...data, isGroup: true })
-        //     .then(() => {
-        //         router.refresh();
-        //         onClose();
-        //     })
-        //     .catch(() => toast.error('Something went wrong'))
-        //     .finally(() => setIsLoading(false));
+       
     };
     return (
         <>
@@ -275,7 +272,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
                         </div>
                         <div className="mt-6 flex items-center justify-end gap-x-6">
                             <Button disabled={isLoading} onClick={onClose} type="button" secondary> Cancel</Button>
-                            <Button disabled={isLoading} type="submit" >Create</Button>
+                            <Button type={'submit'} disabled={isLoading} >Create</Button>
                         </div>
 
                         {   isOpenPayer && <ChoosePayer
