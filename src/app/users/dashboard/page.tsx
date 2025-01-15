@@ -8,7 +8,7 @@ const DashBoard = async () => {
     const currentUser = await getCurrentUser()
     return (
         <div className='w-full'>
-            <MiddleInformation users={Otherusers} currentUser={currentUser} />
+            <MiddleInformation users={Otherusers} currentUser={currentUser} titleText='DashBoard' />
             <div className='full'>
                 <Owe currentUser={currentUser} />
             </div>

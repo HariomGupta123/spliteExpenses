@@ -63,7 +63,7 @@ model Expense {
   groupId       String?       @db.ObjectId
   splits        ExpenseSplit[]
   giveTakeAmount GiveTakeAmount[]
-  getBackAmount Float
+  getBackAmount Float?
 }
 
 model ExpenseSplit {
@@ -96,8 +96,9 @@ model GiveTakeAmount {
   receiverId       String    @db.ObjectId
   giverUser        User      @relation("GiveTake_Giver", fields: [giverId], references: [id]) // Changed from User[] to User
   giverId          String    @db.ObjectId // Changed from String[] to String
-  paidAmount       Float?
-  spliteType       String
+  recieverPaidAmount  Float?
+  giverPaidAmount  Float?
+  spliteType       String?
   toGiveInType     String?
   toRecieveAmount  Float?
   toGiveAmount     Float?

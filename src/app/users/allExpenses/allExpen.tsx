@@ -7,10 +7,14 @@ import ExpenseDetail from "../friends/SingleFriendsExpenses/ExpenseDetial";
 import Detials from "../friends/SingleFriendsExpenses/Detials";
 import { getLoginUser } from "@/app/lib/getCurrentUser";
 import { User } from "@prisma/client";
-interface AllExpenProps{
-    currentUser:User
+import PaidFriendAndYou from "./PaidFriendAndYou";
+import MiddleInformation from "../component/MiddleInformation";
+interface AllExpenProps {
+    currentUser: User
+    users?: User[] | null | undefined;
+    
 }
-const AllExpen:React.FC<AllExpenProps> = ({currentUser}) => {
+const AllExpen: React.FC<AllExpenProps> = ({ currentUser,users }) => {
 
 
     const [selectedId, setSelectedId] = useState<string | null>(null); // Track selected expense ID
@@ -47,26 +51,63 @@ const AllExpen:React.FC<AllExpenProps> = ({currentUser}) => {
 
     return (
         <>
-            {expenses.map((transaction: any) => (
-                <div
+        <MiddleInformation titleText="AllExpenses" users={users} currentUser={currentUser}/>
+            {expenses.map((transaction: any) => {
+                const paidUser = transaction.paidByIds?.[0]
+                const hhh = transaction.giveTakeAmount.filter((hh: any) => hh.giverId === currentUser.id)
+                console.log("hhh", hhh)
+                const involvePeopleLenght = transaction.involvePeopleOncharch.length
+                console.log("lenght",involvePeopleLenght)
+                return <div
                     onClick={() => handleFilteredExpenses(transaction.id)}
-                    key={transaction.id} className="bg-gray-100 p-2 space-y-4 cursor-pointer">
-                    <Detials
-                        formateDate={formatDate(transaction.createdAt)}
-                        transactionDescription={transaction.description}
-                        transactionMonth={transaction.month}
-                        transactionamount={transaction.amount}
-                        transactiongiveTakeAmount={transaction.giveTakeAmount}
-                        userId={userId}
-                        transactionpaidBy={transaction.paidBy}
-                    />
+                    key={transaction.id}
+                >
+                    <div
+                        className=" flex items-center bg-white shadow-md cursor-pointer rounded-lg  border text-sm font-normal sm:gap-2"
+ 
+                    >
+                        <Detials
+                            formateDate={formatDate(transaction.createdAt)}
+                            transactionDescription={transaction.description}
+                            transactionMonth={transaction.month}
+                            transactionamount={transaction.amount}
+                            userId={userId}
+                        />
+                        {
+                           ( paidUser === currentUser.id ) ? (
+                                <PaidFriendAndYou
 
+                                    paidUserName={"you"}
+                                    amount={transaction.amount}
+                                    lentAmount={transaction.getBackAmount}
+                                    text={"Lent"}
+                                /> 
 
+                              
+                            ) :
+                                hhh && <PaidFriendAndYou
+                                    paidUserName={hhh[0].receiverUser?.name}
+                                    text={"Lent"}
+                                    amount={transaction.amount}
+                                    lentAmount={hhh[0].
+                                        toGiveAmount
+                                   }
+                                    style={"text"}
+
+                                    lentYou={"You"}
+
+                                />
+
+                        }
+                    </div>
+                   
 
                     {/* Conditional rendering of ExpenseDetail */}
-                    {selectedId === transaction.id && <ExpenseDetail expenseDetial={filteredExpense} />}
+                    {selectedId === transaction.id && (
+                        <ExpenseDetail expenseDetial={filteredExpense} />
+                    )}
                 </div>
-            ))}
+            })}
         </>
     );
 };

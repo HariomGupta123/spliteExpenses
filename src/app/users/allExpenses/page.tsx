@@ -1,8 +1,10 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import AllExpen from "./allExpen";
+import { getUsers } from "@/app/actions/getUsers";
 
 const AllExpenses = async () => {
     const currentUser = await getCurrentUser();
+    const otherUsers=await getUsers()
 
     if (!currentUser) {
         return (
@@ -14,7 +16,7 @@ const AllExpenses = async () => {
 
     return (
         <>
-            <AllExpen currentUser={currentUser}/>
+            <AllExpen currentUser={currentUser} users={otherUsers}/>
         </>
     );
 };

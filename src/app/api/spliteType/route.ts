@@ -2,11 +2,12 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from "../../lib/prismadb";
 import { NextResponse } from "next/server";
 import getSession from "@/app/actions/getSession";
+import { sendExpenseNotifications } from "@/app/lib/sendExpensesNotification";
 
 export async function POST(request: Request) {
     try {
         const currentUser = await getCurrentUser();
-        console.log("current user",currentUser)
+        console.log("current user", currentUser)
         const session = await getSession();
         console.log("Logged-in user:", session?.user?.email);
         if (!currentUser) {
@@ -28,8 +29,8 @@ export async function POST(request: Request) {
         } = body;
 
         // Validate required fields
-        console.log("amount",amount)
-        console.log("involvePeople",  description,
+        console.log("amount", amount)
+        console.log("involvePeople", description,
             amount,
             paidBy,
             involvePeopleOncharch,
@@ -39,8 +40,8 @@ export async function POST(request: Request) {
             spliteType,
             createdBy,
             toGiveInType)
-        console.log("getBack amount",getBackAmount)
-        if (!description || !amount  || !spliteType) {
+        // console.log("getBack amount", getBackAmount)
+        if (!description || !amount || !spliteType) {
             return new NextResponse("Missing required fields", { status: 400 });
         }
 
@@ -75,8 +76,21 @@ export async function POST(request: Request) {
                 },
             });
 
-
-
+            const people = await prisma.user.findMany({
+                where: {
+                    id: {
+                        in: involvePeopleOncharch.map((user: any) => ({ id: user.id })),
+                    },
+                },
+            });
+            const groupMembers = people.map((user: any) => ({ email: user.email, name: user?.name }))
+            const expense = {
+                description: spliteEqually?.description,
+                amount: spliteEqually.amount,               
+                shareAmout:spliteEqually.getBackAmount
+            }
+           const lll= sendExpenseNotifications(expense, groupMembers)
+           console.log("lll",lll)
 
             return new NextResponse(JSON.stringify(spliteEqually), { status: 201 });
         } else {
@@ -84,7 +98,7 @@ export async function POST(request: Request) {
             // Handle Unequal Split
             const spliteUnequally = await prisma.expense.create({
                 data: {
-                   amount,
+                    amount,
                     description,
                     spliteType,
                     getBackAmount: parseFloat(getBackAmount),
@@ -103,8 +117,8 @@ export async function POST(request: Request) {
                             .map((user: any) => ({
                                 receiverId: paidBy[0], // Single string, not an array
                                 giverId: user.id, // Array is valid as `giverId` is `String[]`
-                                spliteType:spliteType,
-                                toGiveInType:toGiveInType,//like percentage or share
+                                spliteType: spliteType,
+                                toGiveInType: toGiveInType,//like percentage or share
                                 toGiveAmount: user.kharchOnUserInAmount,
                             })),
                     },
@@ -112,7 +126,7 @@ export async function POST(request: Request) {
                     //     create: involvePeopleOncharch.map((user: any) => ({
                     //         receiverId: paidBy,
                     //         giverId: user.id,
-                           
+
                     //         toGiveAmount: user.kharchOnUserInAmount,
                     //     })),
                     // },

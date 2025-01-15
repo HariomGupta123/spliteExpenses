@@ -4,11 +4,13 @@ import AddExpense from "./AddExpense";
 import { User } from "@prisma/client";
 
 interface MiddleInformationProps {
-    users: User[] | null | undefined;
-    currentUser: User | null;
+    titleText:string
+    users?: User[] | null | undefined;
+    currentUser?: User | null;
 }
 
 const MiddleInformation: React.FC<MiddleInformationProps> = ({
+    titleText,
     users,
     currentUser,
 }) => {
@@ -27,7 +29,7 @@ const MiddleInformation: React.FC<MiddleInformationProps> = ({
                 {/* Header Section */}
                 <div className="bg-slate-400 h-14 w-full flex flex-col sm:flex-row justify-between items-center px-5 py-2 sm:py-0">
                     <div className="font-bold text-2xl text-center sm:text-left">
-                        DashBoard
+                      {titleText}
                     </div>
                     <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-5 mt-2 sm:mt-0">
                         <div

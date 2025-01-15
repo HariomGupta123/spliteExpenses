@@ -6,6 +6,8 @@ import { useParams } from "next/navigation";
 import { useExpenseData } from "@/app/users/getExpenses/GetExpenses";
 import Detials from "../Detials";
 import ExpenseDetail from "../ExpenseDetial";
+import LentFriend from "../LentFriend";
+import PaidFriendAndYou from "@/app/users/allExpenses/PaidFriendAndYou";
 
 const TransactionList = () => {
     const router = useParams();
@@ -44,25 +46,52 @@ const TransactionList = () => {
 
     return (
         <>
-            {expensesByUserId.map((transaction: any) => (
-                <div
-                    onClick={() => handleFilteredExpenses(transaction.id)}
+            {expensesByUserId.map((transaction: any) => {
+                const paidUser = transaction.paidByIds?.[0]
 
+               return <div
+                    onClick={() => handleFilteredExpenses(transaction.id)}
+                     
                     key={transaction.id} className="bg-gray-100 p-2 space-y-4 cursor-pointer">
-                    <Detials
-                        formateDate={formatDate(transaction.createdAt)}
-                        transactionDescription={transaction.description}
-                        transactionMonth={transaction.month}
-                        transactionamount={transaction.amount}
-                        transactiongiveTakeAmount={transaction.giveTakeAmount}
-                        userId={userId}
-                        transactionpaidBy={transaction.paidBy}
-                    />
+                        <div 
+                       className=" flex items-center bg-white shadow-md cursor-pointer rounded-lg  border text-sm font-normal sm:gap-2 sm:text-sm sm:font-thin"
+
+                        >
+                       <Detials
+                           formateDate={formatDate(transaction.createdAt)}
+                           transactionDescription={transaction.description}
+                           transactionMonth={transaction.month}
+                           transactionamount={transaction.amount}
+                           userId={userId}
+                       />
+                       <div className="ml-4 flex-1 flex gap-10">
+                           {userId === transaction.paidBy[0].id ?
+                               <PaidFriendAndYou
+                                   paidUserName={transaction.paidBy[0].name}
+                                   amount={transaction.amount}
+                                   lentAmount={transaction.giveTakeAmount[0].toGiveAmount}
+                                   text={` lent you`}
+                                   style={"style"}
+
+
+                               /> : <PaidFriendAndYou
+                                   paidUserName={"you"}
+                                   amount={transaction.amount}
+                                   text={"Lent"}
+                                   lentAmount={transaction.giveTakeAmount[0].toGiveAmount}
+                                   giverUserName={transaction.giveTakeAmount[0].giverUser.name}
+                               />
+                           }
+
+
+                       </div>
+                        </div>
+                  
 
                     {/* Conditional rendering of ExpenseDetail */}
                     {selectedId === transaction.id && <ExpenseDetail expenseDetial={filteredExpense} />}
                 </div>
-            ))}
+})}
         </>
     );
 };

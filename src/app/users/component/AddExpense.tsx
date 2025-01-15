@@ -176,6 +176,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
             console.error("Error creating expense:", error);
             setIsLoading(false)
             toast("something went wrong")
+            console.log("paidone", retriveSpliteType?.onePayerId)
         }
      
       
