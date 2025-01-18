@@ -12,7 +12,8 @@ import { FieldValues, SubmitHandler, useFieldArray, useForm } from 'react-hook-f
 import toast from 'react-hot-toast';
 import ChoosePayer from './ChoosePayer';
 import ChooseSpliteOption from './ChooseSpliteOption/ChooseSpliteOption';
-import { expenseDetial} from '@/app/type/type';
+import { ExpenseDetail } from '@/app/type/type';
+
 export interface FormData {
     people: {
         paid: number;
@@ -36,7 +37,7 @@ interface AddExpenseProps {
     isOpen?: boolean; // corrected the type here
     onClose: () => void;
     users: User[] | null | undefined;
-    currentUser: User | null
+    currentUser?: any
 }
 
 const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, currentUser }) => {
@@ -59,15 +60,14 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
     const [MultiplePayers,setMultiplePayers]=useState<[]>([])
     const [activePayer,setActivePayer]=useState<any>(currentUser?.id)
     const [payerUser, setpayerUser] = useState<person[] | []>([
-        {
-            userId: currentUser.id,
-            userName: currentUser.name,
-            PaidAmount: amount
-        }
+        {userId: currentUser.id,
+        userName: currentUser.name,
+        PaidAmount: amount}
     ]);
+ 
     console.log("currentPayer",payerUser)
   // retriev Splite Type and involve people in splite type
-    const [retriveSpliteType,setRetriveSpliteType]=useState< expenseDetial | null>(null);
+    const [retriveSpliteType,setRetriveSpliteType]=useState< ExpenseDetail | null>(null);
     const retri=retriveSpliteType
     console.log("retriveSpliteType", retri)
 
@@ -115,10 +115,10 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
         setpayerUser([newState]); // Update the state with the new user data
     };
 
-  console.log("chooseOnePayer",payerUser)
+//   console.log("chooseOnePayer",payerUser)
 
     // splite type
-    const handleRetriveSpliteType=(retriveSpliteType:expenseDetial)=>{
+    const handleRetriveSpliteType=(retriveSpliteType:any)=>{
         setRetriveSpliteType(retriveSpliteType);
     }
     console.log("percentageRRRRR:",retriveSpliteType)
@@ -284,10 +284,10 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
                             setIsMultiple={(isMultiples) => setIsMultiple(isMultiples)}
                             openPayer={isOpenPayer}
                             style={"top-28 right-12 "}
-                            userName={fieldSelectedUsersWithCurrentUser}
+                            userName={fieldSelectedUsersWithCurrentUser }
                             register={register}
                             currentUser={currentUser}
-                            selectedMembers={numberOfMembersWithCurrentUser}
+                            // selectedMembers={numberOfMembersWithCurrentUser}
                             errors={errors}
                             chooseOnePayer={chooseOnePayer}
                             chooseMultiplePayer={chooseMultiplePayer}

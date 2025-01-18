@@ -1,10 +1,11 @@
+import { User } from '@prisma/client';
 import nodemailer from 'nodemailer';
 
 export const sendEmailInvitation = async (
  
   recipientEmail: string,
   inviteLink: string,
-senderName: string,
+senderName: User,
 ) => {
   try {
     console.log("Recipient Email:", recipientEmail); // Debug log
@@ -20,9 +21,9 @@ senderName: string,
     });
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from:senderName.email,
       to: recipientEmail,
-      subject: `${senderName} has invited you to join!`,
+      subject: `${senderName?.name} has invited you to join!`,
       html: `
         <h1>You're Invited!</h1>
         <p>${senderName} has invited you to join their expense management group.</p>

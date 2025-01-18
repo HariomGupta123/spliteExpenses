@@ -1,51 +1,26 @@
-"use client"
-import { useQuery } from '@tanstack/react-query';
+"use client";
 import Link from 'next/link';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import EmailInvitationForm from '../../inviteFriends/invite';
 import { FaUser } from 'react-icons/fa';
 import Model from '@/app/componets/Model/Model';
-
-type VerifiedEmailResponse = {
-    usersByEmail: { id: string; name: string; email: string }[];
-    senders: { id: string; name: string; email: string }[];
-};
+import { User } from '@prisma/client';
+import { useGetAllFriends } from './allFriends/getAllFriends';
+import { useRouter } from 'next/navigation';
+import useUserStore from '@/stores/friendName';
 
 const Page = () => {
     const [open, setOpen] = useState(false);
-
-    // Fetch verified email data
-    const fetchVerifiedEmail = async (): Promise<VerifiedEmailResponse> => {
-        const response = await fetch('/api/invite/verifyEmail/getVerifiedEmail');
-        if (!response.ok) {
-            throw new Error('Failed to fetch verified emails');
-        }
-        return response.json();
-    };
-
-    // React Query to fetch data
-    const { data: verifiedEmail, isLoading, isError } = useQuery({
-        queryKey: ['verifiedEmail'],
-        queryFn: fetchVerifiedEmail,
-    });
-
-    // Memoize derived data
-    const { usersByEmail, senders } = useMemo(() => {
-        return {
-            usersByEmail: verifiedEmail?.usersByEmail ?? [],
-            senders: verifiedEmail?.senders ?? [],
-        };
-    }, [verifiedEmail]);
-
-    // Loading and Error States
+   
+    const { allVerifiedFriends, isLoading, isError } = useGetAllFriends();
+    // console.log('Fetched allFriends:', allVerifiedFriends);
     if (isLoading) {
         return <div className="text-center text-gray-500">Loading...</div>;
     }
-
     if (isError) {
         return <div className="text-center text-red-500">Error fetching data</div>;
     }
-
+  
     return (
         <div className="p-4 w-[200px]">
             {/* Modal for inviting a friend */}
@@ -60,23 +35,23 @@ const Page = () => {
                     <span>Friends</span>
                 </div>
                 <div
-                    className=" cursor-pointer flex items-center"
+                    className="cursor-pointer flex items-center"
                     onClick={() => setOpen(true)}
                 >
                     <span className="text-sm font-medium">+</span>
-                    <span className='text-sm font-medium'>Add</span>
+                    <span className="text-sm font-medium">Add</span>
                 </div>
             </div>
 
             {/* Friend List */}
             <div className="mt-4">
-                {/* Users by Email */}
-                {usersByEmail.length > 0 && (
+                {allVerifiedFriends && allVerifiedFriends.length > 0 ? (
                     <div>
-                        {usersByEmail.map((user) => (
+                        {allVerifiedFriends.map((user: User) => (
                             <Link
                                 key={user.id}
                                 href={`/users/friends/SingleFriendsExpenses/${user.id}`}
+
                                 className="flex items-center pl-2 mt-2 pt-1 rounded-md hover:bg-gray-50 transition"
                             >
                                 <FaUser className="text-gray-500 mr-1" />
@@ -84,27 +59,7 @@ const Page = () => {
                             </Link>
                         ))}
                     </div>
-                )}
-
-                {/* Senders */}
-                {senders.length > 0 && (
-                    <div className="mt-4">
-                        <h3 className="text-sm font-medium text-gray-600">Senders</h3>
-                        {senders.map((sender) => (
-                            <Link
-                                key={sender.id}
-                                href={`/friends/${sender.id}`}
-                                className="flex items-center pl-2 mt-2 pt-1 rounded-md hover:bg-gray-50 transition"
-                            >
-                                <FaUser className="text-gray-500 mr-1" />
-                                <span className="text-sm font-medium">{sender.name}</span>
-                            </Link>
-                        ))}
-                    </div>
-                )}
-
-                {/* No Data Fallback */}
-                {usersByEmail.length === 0 && senders.length === 0 && (
+                ) : (
                     <div className="text-center text-gray-500">No friends found.</div>
                 )}
             </div>

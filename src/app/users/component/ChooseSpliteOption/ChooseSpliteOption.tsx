@@ -4,7 +4,7 @@ import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
 import ChooseSpliteOptionCom from './ChooseSpliteOptionCom';
 import { SimplifiedUser } from '../AddExpense';
 import { User } from '@prisma/client';
-import { expenseDetial } from '@/app/type/type';
+import { ExpenseDetail } from '@/app/type/type';
 
 interface ChooseSpliteOptionProps {
     register: UseFormRegister<FieldValues>;
@@ -19,9 +19,9 @@ interface ChooseSpliteOptionProps {
     setIsEqual: (boolean: boolean) => void
     whoOwns:(owns:string | number)=>void
     errors: FieldErrors;
-    userName: SimplifiedUser[]
+    userName: any
     ChooseSpliteOptionFunction: (user: { userId: string; userName: string; PaidAmount: number, paidOwn?: string } | any) => void;
-    handleRetriveSpliteType:expenseDetial |[]
+    handleRetriveSpliteType:(ExpenseDetial:ExpenseDetail)=>void
 }
 const shareType = ["=", "1.23","%", "share", "+/-"]
 
@@ -40,7 +40,7 @@ const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose,handleR
 
     };
     const amount = typeof equalSplitAmount === 'string' ? parseFloat(equalSplitAmount) : equalSplitAmount;
-    const otherOne = (selectedMembers <= 2)? userName.find((user) =>user.name !==currentUser.name)?.name :"you"
+    const otherOne = (selectedMembers <= 2)? userName.find((user:User) =>user.name !==currentUser.name)?.name :"you"
         console.log(otherOne)
     const chooseOwn = [ `you owe md Rs.${amount * selectedMembers}`, `${otherOne} owes you Rs. ${amount * selectedMembers}`]
     return (

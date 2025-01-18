@@ -8,23 +8,40 @@ import Detials from "../Detials";
 import ExpenseDetail from "../ExpenseDetial";
 import LentFriend from "../LentFriend";
 import PaidFriendAndYou from "@/app/users/allExpenses/PaidFriendAndYou";
+import { User } from "@prisma/client";
+import useUserStore from "@/stores/friendName";
+import { useGetAllFriends } from "../../allFriends/getAllFriends";
 
 const TransactionList = () => {
     const router = useParams();
     const userId = router.userId;
+    const {  setfriendName,friendName} = useUserStore();
 
     const [selectedId, setSelectedId] = useState<string | null>(null); // Track selected expense ID
     const [filteredExpense, setFilteredExpense] = useState<any[]>([]);
 
     const { expensesByUserId, isLoading, isError } = useExpenseByUserId(userId);
     const { expenses } = useExpenseData();
+    const {allVerifiedFriends}=useGetAllFriends()
 
+    // const uu = allVerifiedFriends.filter((hh: any) => hh.id === userId)
+console.log("uu",allVerifiedFriends)
     // Conditional rendering
     if (!userId) return <p>Please provide a valid user ID.</p>;
     if (isLoading) return <p>Loading...</p>;
     if (isError) return <p>Failed to load expenses.</p>;
-    if (!expensesByUserId || !expensesByUserId.length) return <p>No expenses found.</p>;
-
+    if (!expensesByUserId || !expensesByUserId.length) {
+        const uu = allVerifiedFriends.filter((hh: any) => hh.id === userId)
+        setfriendName(uu[0].name)
+         return <p>no expanse found</p>
+    }else{
+        const useName = expensesByUserId[0]?.involvePeopleOncharch.filter((user: any) => user.id === userId)
+         setfriendName(useName[0].name)
+    }
+    // const useName = expensesByUserId[0]?.involvePeopleOncharch.filter((user:any)=>user.id===userId)
+    // const uu=allVerifiedFriends.filter((hh:any)=>hh.id===userId)
+   
+    // setfriendName(!expensesByUserId ? uu.name:useName[0].name)
     // Format date
     const formatDate = (date: any) => {
         const dat = new Date(date);

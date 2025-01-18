@@ -1,11 +1,14 @@
-// QueryClientProviderWrapper.js or QueryClientProviderWrapper.tsx
-'use client';
-
+"use client"
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React, { ReactNode } from 'react';
 
 const queryClient = new QueryClient();
 
-const QueryClientProviderWrapper = ({ children }) => {
+interface QueryClientProviderWrapperProps  {
+    children: React.ReactNode
+};
+
+const QueryClientProviderWrapper = ({ children }: QueryClientProviderWrapperProps) => {
     return (
         <QueryClientProvider client={queryClient}>
             {children}

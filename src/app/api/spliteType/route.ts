@@ -75,7 +75,7 @@ export async function POST(request: Request) {
                     },
                 },
             });
-
+            //for notification
             const people = await prisma.user.findMany({
                 where: {
                     id: {
@@ -83,14 +83,16 @@ export async function POST(request: Request) {
                     },
                 },
             });
+
             const groupMembers = people.map((user: any) => ({ email: user.email, name: user?.name }))
+            console.log("groupMember", groupMembers)
             const expense = {
                 description: spliteEqually?.description,
-                amount: spliteEqually.amount,               
-                shareAmout:spliteEqually.getBackAmount
+                amount: spliteEqually.amount,
+                shareAmout: spliteEqually.getBackAmount
             }
-           const lll= sendExpenseNotifications(expense, groupMembers)
-           console.log("lll",lll)
+            const lll = sendExpenseNotifications(expense, groupMembers)
+            console.log("lll", lll)
 
             return new NextResponse(JSON.stringify(spliteEqually), { status: 201 });
         } else {
@@ -132,6 +134,25 @@ export async function POST(request: Request) {
                     // },
                 },
             });
+            //for notification
+            const people = await prisma.user.findMany({
+                where: {
+                    id: {
+                        in: involvePeopleOncharch.map((user: any) => user.id), // Extract the `id` values as an array of strings
+                    },
+                },
+            });
+
+
+            const groupMembers = people.map((user: any) => ({ email: user.email, name: user?.name }))
+            // console.log("groupMember", groupMembers)
+            const expense = {
+                description: spliteUnequally?.description,
+                amount: spliteUnequally.amount,
+                shareAmout: spliteUnequally.getBackAmount
+            }
+            const lll = sendExpenseNotifications(expense, groupMembers)
+            // console.log("lll", lll)
 
             return new NextResponse(JSON.stringify(spliteUnequally), { status: 201 });
         }

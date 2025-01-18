@@ -37,7 +37,7 @@ const VerifyEmail = () => {
         };
 
         verifyEmail();
-    }, [searchParams]);
+    }, [searchParams,router]);
 
     return (
         <div style={{ textAlign: "center", padding: "2rem" }}>

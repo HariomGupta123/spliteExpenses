@@ -15,6 +15,7 @@ export async function GET(request: Request) {
         const invitationsAsSender = await prisma.invitation.findMany({
             where: {
                 senderId: currentUser.id,
+                isUsed: true,
             },
             select: {
                 email: true,
@@ -31,17 +32,13 @@ export async function GET(request: Request) {
                     in: emailsFromInvitations,
                 },
             },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-            },
         });
 
         // 2. Retrieve `senderId` details where currentUser.email matches invitation email
         const invitationsForCurrentUser = await prisma.invitation.findMany({
             where: {
                 email: currentUser.email,
+                isUsed: true,
             },
             select: {
                 senderId: true,
@@ -54,22 +51,22 @@ export async function GET(request: Request) {
                 id: {
                     in: invitationsForCurrentUser.map((inv) => inv.senderId),
                 },
-            },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-            },
+            },           
         });
 
-        // Combine results from both queries
-        const result = {
-            usersByEmail, // Users retrieved where currentUser is senderId
-            senders,      // Sender details where currentUser.email matches invitation email
-        };
+        // Combine `usersByEmail` and `senders` into a single array
+        const combinedResults = [
+            ...usersByEmail,
+            ...senders,
+        ];
 
-        // Return combined result
-        return new NextResponse(JSON.stringify(result), { status: 200 });
+        // Remove duplicates based on unique `id`
+        const uniqueResults = Array.from(
+            new Map(combinedResults.map(user => [user.id, user])).values()
+        );
+       console.log("allFriend",uniqueResults)
+        // Return the unique combined result
+        return new NextResponse(JSON.stringify(uniqueResults), { status: 200 });
     } catch (error: any) {
         console.error("Error fetching data:", error);
 
@@ -80,3 +77,4 @@ export async function GET(request: Request) {
         return new NextResponse("Internal Server Error", { status: 500 });
     }
 }
+

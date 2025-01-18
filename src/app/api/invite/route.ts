@@ -31,7 +31,7 @@ export  async function POST(request:Request) {
         });
           
         // Send the invitation email
-        await sendEmailInvitation(recipientEmail, inviteLink,currentUser.name || senderName);
+        await sendEmailInvitation(recipientEmail, inviteLink,currentUser);
 
         return new NextResponse('Invitation sent successfully.',{status:200});
     } catch (error: any) {

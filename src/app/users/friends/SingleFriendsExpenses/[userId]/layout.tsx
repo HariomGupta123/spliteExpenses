@@ -5,10 +5,11 @@ import React from 'react';
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
     const currentUser =await getCurrentUser();
-    const otherUser=await getUsers()
+  // console.log("sessionStorage", sessionStorage.getItem("FriendName"))
+    // const otherUser=await getUsers()
   return(
     <>
-    <MiddleInformation currentUser={currentUser} users={otherUser} titleText='users'/>
+    <MiddleInformation currentUser={currentUser} titleText="FriendName"  />
     <div>
         {children}
     </div>

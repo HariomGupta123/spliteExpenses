@@ -2,9 +2,11 @@
 import React, { useState } from "react";
 import AddExpense from "./AddExpense";
 import { User } from "@prisma/client";
+import { useGetAllFriends } from "../friends/allFriends/getAllFriends";
+import useUserStore from "@/stores/friendName";
 
 interface MiddleInformationProps {
-    titleText:string
+    titleText?:string | null
     users?: User[] | null | undefined;
     currentUser?: User | null;
 }
@@ -15,6 +17,10 @@ const MiddleInformation: React.FC<MiddleInformationProps> = ({
     currentUser,
 }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const { allVerifiedFriends } = useGetAllFriends()
+    // const FriendName = sessionStorage.getItem("FriendName")
+    const {friendName}=useUserStore()
+    // console.log("userName",userName)
 
     return (
         <>
@@ -22,14 +28,14 @@ const MiddleInformation: React.FC<MiddleInformationProps> = ({
             <AddExpense
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
-                users={users}
+                users={allVerifiedFriends}
                 currentUser={currentUser}
             />
             <aside className="w-full text-white">
                 {/* Header Section */}
                 <div className="bg-slate-400 h-14 w-full flex flex-col sm:flex-row justify-between items-center px-5 py-2 sm:py-0">
                     <div className="font-bold text-2xl text-center sm:text-left">
-                      {titleText}
+                        {titleText === "FriendName" ? friendName : titleText}
                     </div>
                     <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-5 mt-2 sm:mt-0">
                         <div

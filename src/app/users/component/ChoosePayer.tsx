@@ -23,7 +23,7 @@ interface ChoosePayerProps {
     setIsChecked: (isChecked: any | undefined) => void
     style?: string;
     errors: FieldErrors;
-    userName: SimplifiedUser[];
+    userName: any
     chooseOnePayer: (user: { userId: string; userName: string; PaidAmount: number, paidOwn?: string } | any) => void;
     currentUser: User
     chooseMultiplePayer:any
@@ -47,7 +47,7 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ activePayer,setActivePayer,on
     console.log("choosePayerPeople", people)
     const amount = typeof equalSplitAmount === 'string' ? parseFloat(equalSplitAmount) : equalSplitAmount;
     const [isChecked, setIsChecked] = useState(false)
-    const TotalUser: string | number = userName.length
+    const TotalUser:  number = userName.length
     const [multiplePayers, setMultiplePayers] = useState<[]>([])
    const [multiplePayerss,setMultiplePayerss]=useState<[]>([]);
 //    useEffect(()=>{setSelectedUserId(localStorage.getItem("active") ||currentUser.id)},[])
@@ -59,7 +59,7 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ activePayer,setActivePayer,on
         // Create an array to store the selected users
         const updatedUsers: any = [];
 
-        userName.forEach((user, index) => {
+        userName.forEach((user:any, index:number) => {
             if (checked === true) {
                 // Update the paid value for each user
                 setValue(`people.${index}.paid`, equalSplitAmount);
@@ -87,7 +87,7 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ activePayer,setActivePayer,on
     },[isChecked,equalSplitAmount,setValue,userName]);
     const updatedUsers = useMemo(() => {
         if (isChecked === false) {
-            return userName.map((user, index) => {
+            return userName.map((user:any, index:number) => {
                 const userPercentage = people[index]?.paid || '';
                 return {
                     userId: user.id,
@@ -125,7 +125,7 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ activePayer,setActivePayer,on
 
             <div className='mt-10 w-full'>
                 {userName && userName.length > 0 ? (
-                    userName.map((user, index) => {
+                    userName.map((user:any, index:any) => {
                         console.log("alluser", user); // Log each user correctly
                          const comparisionOnActive= activePayer == "you" ? currentUser.id: activePayer
                         const isActive = comparisionOnActive=== user.id  ; // Check if the user is active
@@ -174,7 +174,7 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ activePayer,setActivePayer,on
                             <Checkbox label='Each person paid for their own share' id='checkbox' type='checkbox' onChange={() => handleCheckBox()} register={register} errors={errors} defaultChecked={isChecked} />
 
                             {userName && userName.length > 0 ? (
-                                userName.map((user, index) => {
+                                userName.map((user:any, index:number) => {
                                     const currentPaid = people[index]?.paid ||"0" ; // Get the value from useWatch
 
                                     console.log(`Current value for ${user.name}:`, currentPaid);

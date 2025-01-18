@@ -33,12 +33,16 @@ const AuthForm = () => {
   }, [variant]);
   const onSubmit:SubmitHandler<FieldValues> = (data) => {
     setLoading(true)
-    if(variant == "REGISTER"){
+    if(variant === "REGISTER"){
       axios.post('/api/register',data)
-       .then(()=>signIn("credentials",data))
+       .then(
+        ()=>signIn("credentials",data),
+           ()=> toast("register successfull")
+      )
        .then()
        .catch(()=>toast("something went wrong"))
        .finally(()=>setLoading(false))
+       console.log("data",data)
     }
     if (variant === 'LOGIN') {
       setLoading(true);
