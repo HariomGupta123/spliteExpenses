@@ -9,14 +9,16 @@ interface ButtonProps {
     fullWidth?: boolean
     secondary?: boolean
     danger?: boolean
+    stytle?:string
 
 }
-const Button: React.FC<ButtonProps> = ({ type, children,onClick,disabled ,fullWidth,secondary,danger}) => {
+const Button: React.FC<ButtonProps> = ({ type,stytle, children,onClick,disabled ,fullWidth,secondary,danger}) => {
     return (
         <div>
             <button type={type} onClick={onClick} disabled={disabled} className={clsx(`flex justify-center rounded-md px-3 py-1 text-sm font-normal focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2`,
                 disabled && 'opacity-50 cursor-default ',
-                fullWidth && "w-full",
+                fullWidth ,
+                stytle,
                 secondary ? 'text-gray-900' : 'text-white',
                 danger && "bg-rose-500 hover:bg-rose-600 focus-visible:outline-rose-600",
                 !secondary && !danger && "bg-sky-500 hover:bg-sky-600 focus-visible:outline-sky-600"

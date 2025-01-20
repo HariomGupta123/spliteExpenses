@@ -59,27 +59,28 @@ const Model: React.FC<ModelProps> = ({ isOpen, onClose, children ,heading,style}
                                 text-left
                                 shadow-xsl
                                 transition-all
-                                w-full
+                                w-[350px]
                                 sm:my-8
-                                sm:w-full
+                                sm:w-[400px]
+                                md:w-[400px]
                                 sm:max-w-lg
                                 sm:p-6
                                 ">
                                 <div className="absolute right-0
                                      top-0
                                      h-10
-                                     hidden
+                                     text-center
                                      bg-green-600
-                                     w-full
+                                     w-[400px]
                                     items-center
                                       pr-4
                                        pt-4
-                                        sm:block
+                                       
                                          z-10
                                          ">
                                     <span className="absolute
                                         top-2
-                                        left-5    font-semibold  text-gray-900  ">{heading}</span>
+                                        left-20 sm:left-14 md:left-5 text-center  font-semibold  text-gray-900  ">{heading}</span>
                                     <button
                                        type="button"
                                        className="

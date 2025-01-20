@@ -4,9 +4,10 @@ import AddExpense from "./AddExpense";
 import { User } from "@prisma/client";
 import { useGetAllFriends } from "../friends/allFriends/getAllFriends";
 import useUserStore from "@/stores/friendName";
+import Settle from "@/app/Settle/Settle";
 
 interface MiddleInformationProps {
-    titleText?:string | null
+    titleText?: string | null
     users?: User[] | null | undefined;
     currentUser?: User | null;
 }
@@ -17,9 +18,10 @@ const MiddleInformation: React.FC<MiddleInformationProps> = ({
     currentUser,
 }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [openSettle, setOpenSettle] = useState(false)
     const { allVerifiedFriends } = useGetAllFriends()
     // const FriendName = sessionStorage.getItem("FriendName")
-    const {friendName}=useUserStore()
+    const { friendName } = useUserStore()
     // console.log("userName",userName)
 
     return (
@@ -31,6 +33,7 @@ const MiddleInformation: React.FC<MiddleInformationProps> = ({
                 users={allVerifiedFriends}
                 currentUser={currentUser}
             />
+            <Settle isOpen={openSettle} onClose={() => setOpenSettle(false)} />
             <aside className="w-full text-white">
                 {/* Header Section */}
                 <div className="bg-slate-400 h-14 w-full flex flex-col sm:flex-row justify-between items-center px-5 py-2 sm:py-0">
@@ -44,7 +47,9 @@ const MiddleInformation: React.FC<MiddleInformationProps> = ({
                         >
                             Add An Expense
                         </div>
-                        <div className="bg-orange-600 h-10 rounded-lg py-2 px-4 text-center cursor-pointer hover:bg-orange-400 font-medium">
+                        <div className="bg-orange-600 h-10 rounded-lg py-2 px-4 text-center cursor-pointer hover:bg-orange-400 font-medium"
+                            onClick={() => setOpenSettle(true)}
+                        >
                             Settle Up
                         </div>
                     </div>
