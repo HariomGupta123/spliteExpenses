@@ -3,7 +3,8 @@ import UserAvatar from '../Avatar';
 import Input from '@/app/componets/Input/Input';
 import { SimplifiedUser } from '../AddExpense';
 import { FieldErrors, FieldValues, useForm, UseFormRegister, useWatch, Control } from 'react-hook-form';
-import { User } from '@prisma/client';
+import { User } from '@/app/type/type';
+
 
 interface ExactAmountProps {
     userName: SimplifiedUser[];

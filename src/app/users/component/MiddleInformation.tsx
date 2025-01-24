@@ -1,15 +1,16 @@
 "use client";
 import React, { useState } from "react";
 import AddExpense from "./AddExpense";
-import { User } from "@prisma/client";
+
 import { useGetAllFriends } from "../friends/allFriends/getAllFriends";
 import useUserStore from "@/stores/friendName";
 import Settle from "@/app/Settle/Settle";
+import { User } from "@/app/type/type";
 
 interface MiddleInformationProps {
     titleText?: string | null
     users?: User[] | null | undefined;
-    currentUser?: User | null;
+    currentUser: User
 }
 
 const MiddleInformation: React.FC<MiddleInformationProps> = ({
@@ -36,18 +37,50 @@ const MiddleInformation: React.FC<MiddleInformationProps> = ({
             <Settle isOpen={openSettle} onClose={() => setOpenSettle(false)} />
             <aside className="w-full text-white">
                 {/* Header Section */}
-                <div className="bg-slate-400 h-14 w-full flex flex-col sm:flex-row justify-between items-center px-5 py-2 sm:py-0">
-                    <div className="font-bold text-2xl text-center sm:text-left">
+                <div className="bg-slate-400 h-auto w-full flex flex-col sm:flex-row justify-between items-center px-5 py-3 space-y-2 sm:space-y-0 sm:py-1">
+                    {/* Title Section */}
+                    <div className="font-semibold text-lg h-4 sm:text-xl text-center sm:text-left break-words w-full sm:w-auto">
                         {titleText === "FriendName" ? friendName : titleText}
                     </div>
-                    <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-5 mt-2 sm:mt-0">
+
+                    {/* Buttons Section */}
+                    <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-5 w-full sm:w-auto">
+                        {/* Add Expense Button */}
                         <div
-                            className="bg-red-500 h-10 rounded-lg py-2 px-4 text-center cursor-pointer hover:bg-red-400 font-medium"
+                            className="
+    bg-red-500 
+    h-8
+    w-[150px]
+    sm:w-auto 
+    sm:h-8 
+    sm:rounded-lg
+    rounded-full
+    py-1 
+    sm:py-1 
+    px-4 
+    text-center 
+    cursor-pointer 
+    hover:bg-red-400 
+    font-light 
+    text-base 
+    sm:order-none 
+    order-2 
+    mt-auto 
+    sm:relative 
+    fixed 
+    bottom-20 
+    right-5
+    sm:bottom-auto 
+    sm:right-auto"
                             onClick={() => setIsOpen(true)}
                         >
-                            Add An Expense
+                            Add Expense
                         </div>
-                        <div className="bg-orange-600 h-10 rounded-lg py-2 px-4 text-center cursor-pointer hover:bg-orange-400 font-medium"
+
+
+                        {/* Settle Up Button */}
+                        <div
+                            className="bg-orange-600 h-10 w-full sm:w-auto sm:h-8 rounded-lg py-2 sm:py-1 px-4 text-center cursor-pointer hover:bg-orange-400 font-light text-base hidden sm:block"
                             onClick={() => setOpenSettle(true)}
                         >
                             Settle Up
@@ -55,22 +88,35 @@ const MiddleInformation: React.FC<MiddleInformationProps> = ({
                     </div>
                 </div>
 
+
+
                 {/* Summary Section */}
-                <div className="flex-grow border-t border-b bg-slate-400 py-4 px-5">
-                    <div className="flex flex-wrap justify-center sm:justify-between items-center gap-4 sm:gap-10 font-medium text-sm sm:text-base">
+                <div className="border-t border-b bg-slate-400 py-1 px-2 sm:px-1">
+                    <div className="flex flex-row flex-wrap justify-center sm:justify-between items-center gap-2 sm:gap-10 font-medium text-sm sm:text-base">
+                        {/* Total Balance */}
                         <span className="text-center">
                             Total Balance - <strong>$6544.55</strong>
                         </span>
-                        <span className="hidden sm:block border-r h-full" />
+
+                        {/* Vertical Divider */}
+                        <span className="border-r h-6" />
+
+                        {/* You Owe */}
                         <span className="text-center">
                             You Owe <strong>$655.44</strong>
                         </span>
-                        <span className="hidden sm:block border-r h-full" />
+
+                        {/* Vertical Divider */}
+                        <span className="border-r h-6" />
+
+                        {/* You Are Owed */}
                         <span className="text-center">
                             You Are Owed <strong>$888.40</strong>
                         </span>
                     </div>
                 </div>
+
+
             </aside>
         </>
     );

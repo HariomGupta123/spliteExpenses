@@ -10,7 +10,7 @@ import Shares from './Shares'
 import ExactAmount from './ExactAmount'
 import Percentage from './Percentage'
 import Equally from './Equally'
-import { User } from '@prisma/client'
+import { User } from '@/app/type/type'
 interface ChooseSpliteOptionComProps {
     selectedMembers: number
     userName: SimplifiedUser[]

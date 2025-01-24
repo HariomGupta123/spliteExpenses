@@ -3,8 +3,7 @@ import React, { useState } from 'react'
 import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
 import ChooseSpliteOptionCom from './ChooseSpliteOptionCom';
 import { SimplifiedUser } from '../AddExpense';
-import { User } from '@prisma/client';
-import { ExpenseDetail } from '@/app/type/type';
+import { ExpenseDetail, User } from '@/app/type/type';
 
 interface ChooseSpliteOptionProps {
     register: UseFormRegister<FieldValues>;

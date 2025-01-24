@@ -6,7 +6,7 @@ const Header = async () => {
   const currentUser = await getCurrentUser();
 
   return (
-    <div className="hidden md:flex w-full h-20 bg-red-500 sticky z-10 top-0 font-Poppins text-white">
+    <div className="hidden md:flex w-full h-15 bg-red-500 sticky z-10 top-0 font-Poppins text-white">
       <div className="w-full flex">
         {/* First child (Title) */}
         <div className="flex-grow flex justify-center">

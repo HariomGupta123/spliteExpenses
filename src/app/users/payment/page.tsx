@@ -1,21 +1,41 @@
-import { redirectToEsewa } from "@/app/lib/esewa";
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import axios from 'axios';
 
-const PaymentButton = () => {
-  const handlePayment = () => {
-    redirectToEsewa({
-      amount: 1000, // Payment amount
-      productId: 'product123', // Unique product identifier
-    });
+export default function PaymentSuccess() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const { query } = router;
+    if (query.pidx) {
+      // Verify payment with Khalti API
+      verifyPayment(query.pidx);
+    }
+  }, [router]);
+
+  const verifyPayment = async (pidx:any) => {
+    try {
+      const response = await axios.post(
+        'https://a.khalti.com/api/v2/epayment/lookup/',
+        { pidx },
+        {
+          headers: {
+            Authorization: `Key ${process.env.KHALTI_SECRET_KEY}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.data.status === 'Completed') {
+        alert('Payment Successful!');
+      } else {
+        alert('Payment Verification Failed!');
+      }
+    } catch (error) {
+      console.error('Payment verification failed:', error.response?.data || error.message);
+      alert('Payment verification failed. Please try again.');
+    }
   };
 
-  return (
-    <>
-      <button onClick={handlePayment}>
-      Pay with eSewa
-    </button>
-    </>
-  
-  );
-};
-
-export default PaymentButton;
+  return <div>Payment Success</div>;
+}

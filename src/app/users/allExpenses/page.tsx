@@ -5,7 +5,11 @@ import { getUsers } from "@/app/actions/getUsers";
 const AllExpenses = async () => {
     const currentUser = await getCurrentUser();
     const otherUsers=await getUsers()
-
+    const current = {
+        id: currentUser.id,
+        name: currentUser.name,
+        email: currentUser.email
+    }
     if (!currentUser) {
         return (
             <div>
@@ -16,7 +20,7 @@ const AllExpenses = async () => {
 
     return (
         <>
-            <AllExpen currentUser={currentUser} users={otherUsers}/>
+            <AllExpen currentUser={current} users={otherUsers}/>
         </>
     );
 };

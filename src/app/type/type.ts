@@ -16,3 +16,27 @@ export interface InvolvePeopleOnKharch {
   name: string;
   toGiveInType?: string; // Optional property
 }
+export interface User{
+  id:string,
+  name:string | null ,
+  email:string,  
+}
+export interface person {
+    userId: string;
+    userName: string | null | any
+    PaidAmount: number
+    paidOwn?: string
+    kharchOnUser?: number | null | string
+    spliteType?: string
+}
+export interface SimplifiedUser {
+    id: string;
+    name?: string;
+    paid?: number
+}
+// 
+export interface FormData {
+    people: {
+        paid: number;
+    }[];
+}

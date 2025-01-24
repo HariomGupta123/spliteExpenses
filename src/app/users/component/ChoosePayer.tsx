@@ -5,7 +5,7 @@ import Checkbox from '@/app/componets/Input/CheckBox'
 import { Controller, DefaultValues, FieldErrors, FieldValues, SubmitHandler, useForm, UseFormRegister, useWatch } from 'react-hook-form'
 import Input from '@/app/componets/Input/Input'
 import { person, SimplifiedUser } from './AddExpense'
-import { User } from '@prisma/client'
+import { User } from '@/app/type/type'
 // interface User {
 //     id: string;
 //     name: string;

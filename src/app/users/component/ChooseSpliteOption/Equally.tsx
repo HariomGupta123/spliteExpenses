@@ -5,7 +5,8 @@ import { SimplifiedUser } from '../AddExpense';
 import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
 import Checkbox from '@/app/componets/Input/CheckBox';
 import clsx from 'clsx';
-import { User } from '@prisma/client';
+import { User } from '@/app/type/type';
+
 
 interface EquallyProps {
     userName: SimplifiedUser[];

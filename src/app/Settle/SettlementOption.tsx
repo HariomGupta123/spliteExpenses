@@ -39,10 +39,19 @@ const SettlementOption = () => {
                 <hr className="border-gray-300 border-dashed w-20" />
             </div>
 
-            <div className=' flex justify-center items-center gap-5 mt-4  '>
-                <div className=' text-center text-sm font-thin w-52 rounded-3xl border-orange-100 border-2 px-2  bg-gray-100 hover:bg-gray-200 cursor-pointer'>{date.toLocaleDateString()}</div>
-                <div className=' text-center text-sm font-thin w-52 rounded-3xl border-orange-100 border-2 px-2  bg-gray-100 hover:bg-gray-200 cursor-pointer'>Add note/imags</div>
+            <div className="flex justify-center items-center gap-5 mt-4">
+                <div
+                    className="text-center text-sm font-thin w-52 rounded-3xl border-orange-100 border-2 px-2 bg-gray-100 hover:bg-gray-200 cursor-pointer tracking-wide"
+                >
+                    {date.toLocaleDateString()}
+                </div>
+                <div
+                    className="text-center text-sm font-thin w-52 rounded-3xl border-orange-100 border-2 px-2 bg-gray-100 hover:bg-gray-200 cursor-pointer tracking-wide"
+                >
+                    Add note/imags
+                </div>
             </div>
+
         </div>
     )
 }

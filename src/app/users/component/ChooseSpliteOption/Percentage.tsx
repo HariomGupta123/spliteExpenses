@@ -3,7 +3,7 @@ import { SimplifiedUser } from '../AddExpense';
 import { FieldErrors, FieldValues, useForm, UseFormRegister, useWatch } from 'react-hook-form';
 import UserAvatar from '../Avatar';
 import Input from '@/app/componets/Input/Input';
-import { User } from '@prisma/client';
+import { User } from '@/app/type/type';
 
 interface PercentageProps {
     userName: SimplifiedUser[];

@@ -1,4 +1,3 @@
-// src/stores/userStore.ts
 'use client';
 
 import { create } from 'zustand';

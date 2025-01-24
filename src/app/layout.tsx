@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 // import localFont from "next/font/local";
 import "./globals.css";
 import ContextsToaster from "./contexts/ContextsToaster";
-import AuthContext from "./contexts/AuthContext";
 
 // import QueryClientProviderWrapper from "./contexts/QueryClientContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import QueryClientProviderWrapper from "./contexts/QueryClientContext";
+import AuthContext from "./contexts/AuthContext";
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
