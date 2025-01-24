@@ -18,7 +18,7 @@ interface ChoosePayerProps {
     isMultiple: boolean
     setIsMultiple: (isMultiple: any) => void
     onClose: () => void;
-    openPayer: Boolean;
+    openPayer: boolean;
     setIsChecked: (isChecked: any | undefined) => void
     style?: string;
     errors: FieldErrors;
