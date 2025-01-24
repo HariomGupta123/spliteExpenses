@@ -12,7 +12,7 @@ interface ChooseSpliteOptionProps {
     onClose: () => void;
     onePayer:any
     multiplePayerPeople?:any
-    isSpliteOption: Boolean;
+    isSpliteOption: boolean;
     style?: string;
     currentUser:User
     setIsEqual: (boolean: boolean) => void
