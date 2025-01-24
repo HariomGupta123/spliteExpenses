@@ -5,16 +5,15 @@ import React, { useState } from "react";
 import { useExpenseData } from "@/app/users/getExpenses/GetExpenses";
 import ExpenseDetail from "../friends/SingleFriendsExpenses/ExpenseDetial";
 import Detials from "../friends/SingleFriendsExpenses/Detials";
-import { getLoginUser } from "@/app/lib/getCurrentUser";
 import PaidFriendAndYou from "./PaidFriendAndYou";
 import MiddleInformation from "../component/MiddleInformation";
 import { User } from "@/app/type/type";
 interface AllExpenProps {
     currentUser: User
-    users?: User[] | null | undefined;
+    // users?: User[] | null | undefined;
     
 }
-const AllExpen: React.FC<AllExpenProps> = ({ currentUser,users }) => {
+const AllExpen: React.FC<AllExpenProps> = ({ currentUser}) => {
 
 
     const [selectedId, setSelectedId] = useState<string | null>(null); // Track selected expense ID
@@ -51,7 +50,7 @@ const AllExpen: React.FC<AllExpenProps> = ({ currentUser,users }) => {
 
     return (
         <>
-        <MiddleInformation titleText="AllExpenses" users={users} currentUser={currentUser} />
+        <MiddleInformation titleText="AllExpenses"  currentUser={currentUser} />
             {expenses.map((transaction: any) => {
                 const paidUser = transaction.paidByIds?.[0]
                 const hhh = transaction.giveTakeAmount.filter((hh: any) => hh.giverId === currentUser.id)

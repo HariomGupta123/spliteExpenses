@@ -1,6 +1,7 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from "../../../lib/prismadb";
 import { NextResponse } from "next/server";
+export const dynamic = "force-dynamic"; // Prevent static rendering
 
 export async function GET() {
     try {

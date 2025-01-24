@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 export const useGetAllFriends = () => {
     const allVerifiedFriend = async () => {
-        const response = await fetch("/api/invite/verifyEmail/getVerifiedEmail");
+        const response = await fetch("/api/invite/verifyEmail/getVerifiedEmail", { next: { revalidate: 0 } });
         if (!response.ok) {
             throw new Error("Failed to fetch expenses");
         }

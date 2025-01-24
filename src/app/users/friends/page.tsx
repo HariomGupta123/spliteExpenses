@@ -6,8 +6,8 @@ import { FaUser } from 'react-icons/fa';
 import Model from '@/app/componets/Model/Model';
 import { User } from '@prisma/client';
 import { useGetAllFriends } from './allFriends/getAllFriends';
-import { useRouter } from 'next/navigation';
-import useUserStore from '@/stores/friendName';
+// import { useRouter } from 'next/navigation';
+// import useUserStore from '@/stores/friendName';
 
 const Page = () => {
     const [open, setOpen] = useState(false);

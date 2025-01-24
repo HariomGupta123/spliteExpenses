@@ -1,17 +1,25 @@
-
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from "../../lib/prismadb";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic"; // Mark this route as dynamic
+
 export async function GET() {
     try {
-      
-         const currentUser = await getCurrentUser();
+        // Retrieve the current user
+        const currentUser = await getCurrentUser();
         if (!currentUser) {
-            return new NextResponse("Unauthorized", { status: 401 });
+            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
         }
-       const currentUserEmail=currentUser.id
+
+        // Extract current user's ID
+        const currentUserId = currentUser.id;
+
+        // Fetch expenses from Prisma
         const expenses = await prisma.expense.findMany({
+            where: {
+                createdById: currentUserId, // Adjust condition based on your data structure
+            },
             select: {
                 id: true,               // Include the unique ID
                 description: true,      // Include description
@@ -20,47 +28,42 @@ export async function GET() {
                 createdBy: {            // Include details of the creator
                     select: {
                         id: true,
-                        name: true,     // Example field
+                        name: true,
                     },
                 },
                 paidBy: {                // Include details of the payers
                     select: {
                         id: true,
-                        name: true,     // Example field
+                        name: true,
                     },
                 },
                 involvePeopleOncharch: { // Include involved people
                     select: {
                         id: true,
-                        name: true,     // Example field
+                        name: true,
                     },
                 },
                 group: {                 // Include group information if any
                     select: {
                         id: true,
-                        name: true,     // Example field
+                        name: true,
                     },
                 },
             },
         });
 
-
-
-
-
+        // Check if expenses were found
         if (!expenses.length) {
-            return new NextResponse("No expenses found", { status: 404 });
+            return NextResponse.json({ message: "No expenses found" }, { status: 404 });
         }
 
-
-
-        // Return the expenses in the response
-        return new NextResponse(JSON.stringify(expenses), { status: 200 });
+        // Return the expenses
+        return NextResponse.json(expenses, { status: 200 });
     } catch (error) {
         console.error("Error fetching expenses:", error);
-        if (error instanceof Error) {
-            return new NextResponse(error.message, { status: 500 });
-        }
-        return new NextResponse("Internal Server Error", { status: 500 });
+        return NextResponse.json(
+            { message: error instanceof Error ? error.message : "Internal Server Error" },
+            { status: 500 }
+        );
     }
 }
