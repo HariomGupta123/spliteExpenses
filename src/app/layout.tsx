@@ -2,7 +2,7 @@
 import "./globals.css";
 import ContextsToaster from "./contexts/ContextsToaster";
 import QueryClientProviderWrapper from "./contexts/QueryClientContext";
-import AuthContext from "./contexts/AuthContext";
+import { SessionProvider } from "next-auth/react";
 
 export default function RootLayout({
   children,
@@ -12,12 +12,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthContext>
+        <SessionProvider>
           <ContextsToaster />
           <QueryClientProviderWrapper>
             {children}
           </QueryClientProviderWrapper>
-        </AuthContext>
+        </SessionProvider>
       </body>
     </html>
   );
