@@ -4,7 +4,6 @@ import UserAvatar from './Avatar'
 import Checkbox from '@/app/componets/Input/CheckBox'
 import { Controller, DefaultValues, FieldErrors, FieldValues, SubmitHandler, useForm, UseFormRegister, useWatch } from 'react-hook-form'
 import Input from '@/app/componets/Input/Input'
-import { person, SimplifiedUser } from './AddExpense'
 import { User } from '@/app/type/type'
 // interface User {
 //     id: string;
@@ -44,7 +43,7 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ activePayer,setActivePayer,on
     useEffect(() => {
         setAxactAmount(watchedPeople || []);
     }, [watchedPeople]);
-    console.log("choosePayerPeople", people)
+    // console.log("choosePayerPeople", people)
     const amount = typeof equalSplitAmount === 'string' ? parseFloat(equalSplitAmount) : equalSplitAmount;
     const [isChecked, setIsChecked] = useState(false)
     const TotalUser:  number = userName.length
@@ -111,8 +110,8 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ activePayer,setActivePayer,on
            }
         
        },[updatedUsers,chooseMultiplePayer,setMultiplePayers,multiplePayers,multiplePayerss,isChecked,activePayer])
-    console.log("multiplepayers", multiplePayers);
-    console.log("multiplepayerss", multiplePayerss);
+    // console.log("multiplepayers", multiplePayers);
+    // console.log("multiplepayerss", multiplePayerss);
 
 
     const handleInputChange = useCallback((value: number | string, index: number) => {
@@ -126,11 +125,11 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ activePayer,setActivePayer,on
             <div className='mt-10 w-full'>
                 {userName && userName.length > 0 ? (
                     userName.map((user:any, index:any) => {
-                        console.log("alluser", user); // Log each user correctly
+                        // console.log("alluser", user); // Log each user correctly
                          const comparisionOnActive= activePayer == "you" ? currentUser.id: activePayer
                         const isActive = comparisionOnActive=== user.id  ; // Check if the user is active
-                        console.log("activePayer",activePayer)
-                        console.log("active",isActive)
+                        // console.log("activePayer",activePayer)
+                        // console.log("active",isActive)
                         return (
                             <div
                                 key={user.id}

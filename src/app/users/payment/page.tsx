@@ -32,7 +32,7 @@ export default function PaymentSuccess() {
       } else {
         alert('Payment Verification Failed!');
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Payment verification failed:', error.response?.data || error.message);
       alert('Payment verification failed. Please try again.');
     }

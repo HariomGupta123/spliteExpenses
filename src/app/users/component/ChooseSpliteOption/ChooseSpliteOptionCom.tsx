@@ -4,13 +4,12 @@ import Input from '@/app/componets/Input/Input'
 import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form'
 import Checkbox from '@/app/componets/Input/CheckBox'
 import clsx from 'clsx'
-import { SimplifiedUser } from '../AddExpense'
 import Adjustment from './Adjustment'
 import Shares from './Shares'
 import ExactAmount from './ExactAmount'
 import Percentage from './Percentage'
 import Equally from './Equally'
-import { User } from '@/app/type/type'
+import { SimplifiedUser, User } from '@/app/type/type'
 interface ChooseSpliteOptionComProps {
     selectedMembers: number
     userName: SimplifiedUser[]

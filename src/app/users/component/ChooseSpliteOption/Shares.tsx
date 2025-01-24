@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import UserAvatar from '../Avatar';
 import Input from '@/app/componets/Input/Input';
-import { SimplifiedUser } from '../AddExpense';
+// import { SimplifiedUser } from '../AddExpense';
 import { FieldErrors, FieldValues, useForm, UseFormRegister, useWatch } from 'react-hook-form';
-import { User } from '@/app/type/type';
+import { SimplifiedUser, User } from '@/app/type/type';
 
 interface ShareProps {
     userName: SimplifiedUser[];

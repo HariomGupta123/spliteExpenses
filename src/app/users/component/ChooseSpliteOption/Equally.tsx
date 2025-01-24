@@ -1,11 +1,11 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import UserAvatar from '../Avatar';
 import Input from '@/app/componets/Input/Input';
-import { SimplifiedUser } from '../AddExpense';
+// import { SimplifiedUser } from '../AddExpense';
 import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
 import Checkbox from '@/app/componets/Input/CheckBox';
 import clsx from 'clsx';
-import { User } from '@/app/type/type';
+import { SimplifiedUser, User } from '@/app/type/type';
 
 
 interface EquallyProps {

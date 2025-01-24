@@ -18,7 +18,8 @@ import SelectedPayer from './AddExpenseMember/SelectedPayer';
 // export interface FormData {
 //     people: {
 //         paid: number;
-//     }[];
+//     }[];    console.log("members", members)
+
 // }
 
 
@@ -69,12 +70,11 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
     const router = useRouter();
     const date = new Date()
     const numberOfMembers = members.length;
-    console.log("members", members)
     const currentUsers = [currentUser]
     const currentUserLenght = currentUsers.length
-    console.log("currentUsersLength:", currentUserLenght)
+    // console.log("currentUsersLength:", currentUserLenght)
     const numberOfMembersWithCurrentUser = currentUserLenght ? (currentUserLenght + numberOfMembers) : currentUserLenght
-    console.log("numberOfMembersWithCurrentUser", numberOfMembersWithCurrentUser)
+    // console.log("numberOfMembersWithCurrentUser", numberOfMembersWithCurrentUser)
     const equalSplitAmount = (numberOfMembersWithCurrentUser > 0 && amount) ? ((Number(amount) / numberOfMembersWithCurrentUser).toFixed(2)) : (0);
     // selected user after comparing with all users from the database
     const useMemoToSelectedUsers = useMemo(() => {
@@ -118,16 +118,15 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
     const innerArray = [payerUser]
     const lengthOfInnerArray = innerArray[0].length || 0; // Safe access with optional chaining
     console.log("lengthOfInnerArray", lengthOfInnerArray); // Output: 2
-    const pickOnePayer = payerUser.map((user) => {
-        const currentUserName = user.userName === currentUser?.name ? "you" : (user.userName || "")
-        return currentUserName
-    });
+    const pickOnePayer = useMemo(() => {
+        return payerUser.map((user) => {
+            return user.userName === currentUser?.name ? "you" : user.userName || "";
+        });
+    }, [payerUser, currentUser]); // Dependencies: payerUser, currentUser
 
-    console.log("pickone", pickOnePayer)
     useEffect(() => {
-
-        setActivePayer(pickOnePayer)
-    }, [])
+        setActivePayer(pickOnePayer);
+    }, [pickOnePayer]);
     const [selectedOwns, setSelectedOwns] = useState<string | number>(""); // To store the selected option
 
     // Function passed to the child component
@@ -193,7 +192,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
 
 
     };
-    console.log("amount", amount)
+    // console.log("amount", amount)
     return (
         <>
             <Model isOpen={isOpen} onClose={onClose} heading='Add an Expenses' >

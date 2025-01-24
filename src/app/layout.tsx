@@ -8,6 +8,7 @@ import ContextsToaster from "./contexts/ContextsToaster";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import QueryClientProviderWrapper from "./contexts/QueryClientContext";
 import AuthContext from "./contexts/AuthContext";
+// import AuthContext from "./contexts/AuthContext";
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",

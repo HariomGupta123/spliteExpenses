@@ -5,18 +5,23 @@ import { getUsers } from "@/app/actions/getUsers";
 const AllExpenses = async () => {
     const currentUser = await getCurrentUser();
     const otherUsers=await getUsers()
+    if (!currentUser) {
+        throw new Error('Current user is not available.');
+    }
+
     const current = {
         id: currentUser.id,
         name: currentUser.name,
-        email: currentUser.email
-    }
-    if (!currentUser) {
-        return (
-            <div>
-                <h1>Please log in to access this page.</h1>
-            </div>
-        );
-    }
+        email: currentUser.email,
+    };
+
+    // if (!currentUser) {
+    //     return (
+    //         <div>
+    //             <h1>Please log in to access this page.</h1>
+    //         </div>
+    //     );
+    // }
 
     return (
         <>

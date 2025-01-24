@@ -1,8 +1,8 @@
 import Input from '@/app/componets/Input/Input';
 import React from 'react'
 import UserAvatar from '../Avatar';
-import { SimplifiedUser } from '../AddExpense';
 import { FieldErrors, FieldValues, useForm, UseFormRegister, useWatch } from 'react-hook-form';
+import { SimplifiedUser } from '@/app/type/type';
 interface AdjustmentProps{
     userName:SimplifiedUser[]
     register: UseFormRegister<FieldValues>

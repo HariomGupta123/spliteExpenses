@@ -2,7 +2,7 @@ import Model from '@/app/componets/Model/Model'
 import React, { useState } from 'react'
 import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
 import ChooseSpliteOptionCom from './ChooseSpliteOptionCom';
-import { SimplifiedUser } from '../AddExpense';
+// import { SimplifiedUser } from '../AddExpense';
 import { ExpenseDetail, User } from '@/app/type/type';
 
 interface ChooseSpliteOptionProps {
@@ -40,7 +40,7 @@ const ChooseSpliteOption: React.FC<ChooseSpliteOptionProps> = ({ onClose,handleR
     };
     const amount = typeof equalSplitAmount === 'string' ? parseFloat(equalSplitAmount) : equalSplitAmount;
     const otherOne = (selectedMembers <= 2)? userName.find((user:User) =>user.name !==currentUser.name)?.name :"you"
-        console.log(otherOne)
+        // console.log(otherOne)
     const chooseOwn = [ `you owe md Rs.${amount * selectedMembers}`, `${otherOne} owes you Rs. ${amount * selectedMembers}`]
     return (
         <Model heading='Choose Splite Option ' isOpen={isSpliteOption} onClose={onClose} style={style}>

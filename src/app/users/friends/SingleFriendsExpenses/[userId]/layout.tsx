@@ -5,8 +5,15 @@ import React from 'react';
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
     const currentUser =await getCurrentUser();
-  // console.log("sessionStorage", sessionStorage.getItem("FriendName"))
-    // const otherUser=await getUsers()
+  if (!currentUser) {
+    throw new Error('Current user is not available.');
+  }
+
+  const current = {
+    id: currentUser.id,
+    name: currentUser.name,
+    email: currentUser.email,
+  };
   return(
     <>
     <MiddleInformation currentUser={currentUser} titleText="FriendName"  />

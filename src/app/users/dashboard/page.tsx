@@ -8,11 +8,15 @@ const DashBoard = async () => {
     
     // const otherUser =await getUsers()
     const currentUser = await getCurrentUser()
-    const current={
-        id:currentUser.id,
-        name:currentUser.name,
-        email:currentUser.email
+    if (!currentUser) {
+        throw new Error('Current user is not available.');
     }
+
+    const current = {
+        id: currentUser.id,
+        name: currentUser.name,
+        email: currentUser.email,
+    };
 
 
     return (
