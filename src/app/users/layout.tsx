@@ -1,15 +1,10 @@
 import React from 'react';
-import Userlist from './component/Userlist';
-import { getUsers } from '../actions/getUsers';
-import getCurrentUser from '../actions/getCurrentUser';
-import Header from './component/Header/Header';
+
 import LeftSide from './LeftSide/leftSide';
 import SideBar from './SideBar/SideBar';
 
 const Userlayout = async ({ children }: { children: React.ReactNode }) => {
-  const Users = await getUsers();
-  // const currentUser = await getCurrentUser();
-
+ 
   return (
     <div className="h-screen flex flex-col">
       <SideBar>

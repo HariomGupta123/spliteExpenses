@@ -1,8 +1,4 @@
-import getCurrentUser from "@/app/actions/getCurrentUser";
 import { useQuery } from "@tanstack/react-query";
-
-
-
 export const useExpenseData = () => {
     const fetchExpenses = async () => {
         const response = await fetch("/api/getExpenses/getRecieve");
