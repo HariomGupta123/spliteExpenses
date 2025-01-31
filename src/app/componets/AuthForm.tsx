@@ -66,7 +66,7 @@ const AuthForm = () => {
           }
 
           if (callback?.ok && !callback?.error) {
-            await getSession(); // Ensure the session is updated
+            await getSession(); 
             toast.success('Logged in successfully!');
             route.push('/users/dashboard');
           }
@@ -79,7 +79,7 @@ const AuthForm = () => {
         .finally(() => setLoading(false));
     }
 
-    console.log("Data submitted:", data); // Keep this for debugging if necessary
+    console.log("Data submitted:", data); 
   };
 
 
