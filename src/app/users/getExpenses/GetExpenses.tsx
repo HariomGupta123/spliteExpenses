@@ -23,7 +23,7 @@ export const useExpenseData = () => {
     //     : [];  // If not an array, return an empty array
 
     // console.log("Extracted IDs:", extractedIds);
-   console.log("invol",involvePeopleOncharch)
-   console.log("sdjkgsd",expenses)
+//    console.log("invol",involvePeopleOncharch)
+//    console.log("sdjkgsd",expenses)
     return { expenses,involvePeopleOncharch,  isLoading, isError, };
 };
