@@ -6,7 +6,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { NextAuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
@@ -61,5 +61,4 @@ const authOptions: NextAuthOptions = {
   debug: process.env.NODE_ENV !== "production",
 };
 
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+
