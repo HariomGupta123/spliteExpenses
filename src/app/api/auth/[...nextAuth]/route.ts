@@ -61,6 +61,5 @@ const authOptions: NextAuthOptions = {
   debug: process.env.NODE_ENV !== "production",
 };
 
-// ✅ NextAuth handler setup
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };

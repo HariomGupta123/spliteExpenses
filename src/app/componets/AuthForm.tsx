@@ -31,25 +31,35 @@ const AuthForm = () => {
       setVariant('LOGIN')
     }
   }, [variant]);
-  const onSubmit:SubmitHandler<FieldValues> = (data) => {
-    setLoading(true)
-    if(variant === "REGISTER"){
-      axios.post('/api/register',data)
-       .then(
-        ()=>signIn("credentials",data),
-           ()=> toast("register successfull")
-      )
-       .then()
-       .catch(()=>toast("something went wrong"))
-       .finally(()=>setLoading(false))
-       console.log("data",data)
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    setLoading(true);
+
+    if (variant === "REGISTER") {
+      // Handle registration first
+      axios.post('/api/register', data)
+        .then(() => {
+          toast.success('Registration successful!');
+          // Proceed to signIn after successful registration
+          return signIn("credentials", { ...data, redirect: false });
+        })
+        .then((callback) => {
+          if (callback?.error) {
+            toast.error('Registration failed! Please try again.');
+          }
+        })
+        .catch((error) => {
+          const errorMessage = error.response?.data?.message || 'Something went wrong during registration.';
+          toast.error(errorMessage);
+          console.error('Registration error:', error); // Log the full error for debugging
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
+
     if (variant === 'LOGIN') {
-      setLoading(true);
-      signIn('credentials', {
-        ...data,
-        redirect: false,
-      })
+      // Handle login
+      signIn('credentials', { ...data, redirect: false })
         .then(async (callback) => {
           if (callback?.error) {
             toast.error('Invalid credentials');
@@ -57,13 +67,22 @@ const AuthForm = () => {
 
           if (callback?.ok && !callback?.error) {
             await getSession(); // Ensure the session is updated
-            toast.success('Logged in!');
+            toast.success('Logged in successfully!');
             route.push('/users/dashboard');
           }
         })
+        .catch((error) => {
+          const errorMessage = error.response?.data?.message || 'Something went wrong during login.';
+          toast.error(errorMessage);
+          console.error('Login error:', error); // Log the full error for debugging
+        })
         .finally(() => setLoading(false));
     }
-  }
+
+    console.log("Data submitted:", data); // Keep this for debugging if necessary
+  };
+
+
   return (
     <div className='pt-5 sm:mx-auto ms:w-full ms:max-w-md w-[400px]'>
       <div className='bg-white px-4  py-8 shadow sm:rounded-lg sm:px-10'>
