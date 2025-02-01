@@ -1,11 +1,12 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import AllExpen from "./allExpen";
+import { redirect } from "next/navigation";
 
 const AllExpenses = async () => {
     const currentUser = await getCurrentUser();
   
     if (!currentUser) {
-        throw new Error('Current user is not available.');
+        redirect("/")
     }
 
     const current = {

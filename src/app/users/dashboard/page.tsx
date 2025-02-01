@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import MiddleInformation from '../component/MiddleInformation'
 import Owe from '../Owe/owe'
 import getCurrentUser from '@/app/actions/getCurrentUser';
@@ -7,7 +8,7 @@ const DashBoard = async () => {
     
     const currentUser = await getCurrentUser()
     if (!currentUser) {
-        throw new Error('Current user is not available.');
+        redirect("/")
     }
 
     const current = {

@@ -2,12 +2,25 @@ import React from 'react';
 
 import LeftSide from './LeftSide/leftSide';
 import SideBar from './SideBar/SideBar';
+import getCurrentUser from '../actions/getCurrentUser';
+import { redirect } from 'next/navigation';
 
 const Userlayout = async ({ children }: { children: React.ReactNode }) => {
- 
+//  const currentUser=await getCurrentUser()
+
+  const currentUser = await getCurrentUser()
+  if (!currentUser) {
+    redirect("/"); // Redirect if user is not found
+  }
+
+  const current = {
+    id: currentUser.id,
+    name: currentUser.name,
+    email: currentUser.email,
+  };
   return (
     <div className="h-screen flex flex-col">
-      <SideBar>
+      <SideBar currentUser={currentUser}>
         <div className="flex flex-col md:flex-row h-full">
           {/* Left Side */}
           <div className="hidden md:flex md:w-1/4 lg:w-1/5 border-r border-gray-300 shadow-md">

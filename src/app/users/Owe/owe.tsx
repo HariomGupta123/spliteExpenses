@@ -18,24 +18,22 @@ interface OweProps {
 const Owe: React.FC<OweProps> = ({ currentUser }) => {
     const { numbers, sum, addNumbers } = useStore();
     const {addToGiveAmount,arrayNumbers,sumOfGiveAmount}=useToGiveAmount()
-    const [onGoing,setOnGoing]=useState([])
-    const [incoming,setInComing]=useState([])
+   
     const [oweList, setOweList] = useState("LIST");
 
     const { expenses, isError, isLoading } = useExpenseData();
 
-    useEffect(() => {
-        if (expenses && currentUser) {
+    
+       
             const giveTakeAmountss = expenses?.flatMap((expense: any) => expense.giveTakeAmount);
             const { outgoing,incoming } = filterTransactions(giveTakeAmountss, currentUser?.id);
-            setOnGoing(outgoing)
-            setInComing(incoming)
+           
             const hh = outgoing.map((item: any) => item.toGiveAmount);
             const ins=incoming.map((item:any)=>item.toGiveAmount);
             addToGiveAmount(ins);
             addNumbers(hh);
-        }
-    }, [expenses, currentUser, addNumbers,addToGiveAmount]); 
+     
+    
 
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error fetching data</div>;
@@ -72,7 +70,7 @@ const Owe: React.FC<OweProps> = ({ currentUser }) => {
             {oweList === "LIST" ? (
                 <div className="flex flex-col md:flex-row items-start gap-4 mt-5">
                     <div className="flex-1 w-full md:w-auto">
-                        <YouOwe outGoing={onGoing} />
+                        <YouOwe outGoing={outgoing} />
                     </div>
 
                     <div className="hidden md:block border-l border-gray-300 h-[300px] mx-4" />

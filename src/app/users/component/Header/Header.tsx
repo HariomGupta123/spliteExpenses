@@ -1,11 +1,20 @@
 import profile from "../../../../../public/cardphoto.jpeg";
 import getCurrentUser from "@/app/actions/getCurrentUser";
+import Profile from "@/app/componets/Profile/Profile";
+import { User } from "@/app/type/type";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-
-const Header = async () => {
-  const currentUser = await getCurrentUser();
+interface HeaderProps{
+  isOpen:boolean,
+  onClose:()=>void
+  handleOpen:()=>void
+  currentUser:User
+}
+const Header:React.FC<HeaderProps> =  ({isOpen,onClose,handleOpen,currentUser}) => {
+  // const currentUser = await getCurrentUser();
 
   return (
+    <>
+   {isOpen && <Profile onClose={onClose}/> }
     <div className="hidden md:flex w-full h-15 bg-red-500 sticky z-10 top-0 font-Poppins text-white">
       <div className="w-full flex">
         {/* First child (Title) */}
@@ -24,13 +33,14 @@ const Header = async () => {
                 <AvatarImage src={profile.src} alt="profile" />
               </Avatar>
             </span>
-            <span className="font-semibold text-white">
-              {currentUser?.name}
+            <span className="font-semibold text-white cursor-pointer" onClick={handleOpen}>
+              {currentUser.name}
             </span>
           </div>
         </div>
       </div>
     </div>
+    </>
   );
 };
 
