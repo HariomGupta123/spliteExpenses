@@ -4,9 +4,12 @@ import { create } from 'zustand';
 
 type UserState = {
   friendName: string;
+    // amount:number;
   setfriendName: (name: string) => void;
   resetfriendName: () => void;
+  // amount:number;
 };
+
 
 const useUserStore = create<UserState>((set) => ({
   friendName: '',
@@ -20,6 +23,8 @@ const useUserStore = create<UserState>((set) => ({
     });
   },
   resetfriendName: () => set({ friendName: '' }),
+  
+ 
 }));
 
 export default useUserStore;

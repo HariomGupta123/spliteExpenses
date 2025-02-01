@@ -1,12 +1,10 @@
 "use client";
-
 import React, { useState } from "react";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
-import Input from "../componets/Input/Input"; // Adjust the import path
-import Button from "../componets/Button/Button"; // Adjust the import path
-
+import Input from "../componets/Input/Input"; 
+import Button from "../componets/Button/Button"; 
 const EmailInvitationForm = () => {
     const [isLoading, setIsLoading] = useState(false);
 
@@ -14,7 +12,7 @@ const EmailInvitationForm = () => {
         register,
         handleSubmit,
         formState: { errors },
-        reset, // Added reset method
+        reset, 
     } = useForm<FieldValues>({
         defaultValues: { email: "" },
     });
@@ -26,7 +24,7 @@ const EmailInvitationForm = () => {
             await axios.post("/api/invite", { recipientEmail: data.email });
             toast.success("Invitation sent successfully!");
             console.log("Email sent to:", data.email);
-            reset(); // Clears the input field after successful submission
+            reset(); 
         } catch (error: any) {
             toast.error(
                 `Error sending invitation: ${error.response?.data?.message || "Unexpected error"}`

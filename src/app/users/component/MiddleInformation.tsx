@@ -6,6 +6,8 @@ import { useGetAllFriends } from "../friends/allFriends/getAllFriends";
 import useUserStore from "@/stores/friendName";
 import Settle from "@/app/Settle/Settle";
 import { User } from "@/app/type/type";
+import useToGiveAmount from "@/stores/totalGiveAmount";
+import useStore from "@/stores/totalReceiveAmount";
 
 interface MiddleInformationProps {
     titleText?: string | null
@@ -20,6 +22,8 @@ const MiddleInformation: React.FC<MiddleInformationProps> = ({
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [openSettle, setOpenSettle] = useState(false)
+    const {sumOfGiveAmount}=useToGiveAmount()
+    const {sum}=useStore()
     const { allVerifiedFriends } = useGetAllFriends()
     // const FriendName = sessionStorage.getItem("FriendName")
     const { friendName } = useUserStore()
@@ -103,7 +107,7 @@ const MiddleInformation: React.FC<MiddleInformationProps> = ({
 
                         {/* You Owe */}
                         <span className="text-center">
-                            You Owe <strong>$655.44</strong>
+                            You Owe <strong>${sum.toFixed(2)}</strong>
                         </span>
 
                         {/* Vertical Divider */}
@@ -111,7 +115,7 @@ const MiddleInformation: React.FC<MiddleInformationProps> = ({
 
                         {/* You Are Owed */}
                         <span className="text-center">
-                            You Are Owed <strong>$888.40</strong>
+                            You Are Owed <strong>${sumOfGiveAmount.toFixed(2)}</strong>
                         </span>
                     </div>
                 </div>

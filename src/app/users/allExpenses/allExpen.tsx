@@ -54,7 +54,7 @@ const AllExpen: React.FC<AllExpenProps> = ({ currentUser}) => {
             {expenses.map((transaction: any) => {
                 const paidUser = transaction.paidByIds?.[0]
                 const hhh = transaction.giveTakeAmount.filter((hh: any) => hh.giverId === currentUser.id)
-                console.log("hhh", hhh)
+                // console.log("hhh", hhh)
                 const involvePeopleLenght = transaction.involvePeopleOncharch.length
                 console.log("lenght",involvePeopleLenght)
                 return <div

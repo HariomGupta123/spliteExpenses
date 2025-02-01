@@ -15,7 +15,7 @@ const Userlayout = async ({ children }: { children: React.ReactNode }) => {
           </div>
 
           {/* Main Content */}
-          <div className="flex-grow flex flex-col md:w-1/2 lg:w-3/5 border-l border-r border-gray-300 shadow-lg">
+          <div className="flex-grow flex flex-col md:w-1/2 sm:w-2/5 border-l border-r border-gray-300 shadow-lg">
             {children}
           </div>
 
