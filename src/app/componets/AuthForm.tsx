@@ -59,23 +59,27 @@ const AuthForm = () => {
 
     if (variant === 'LOGIN') {
       // Handle login
-      signIn('credentials', { ...data, redirect: false })
+      signIn('credentials', {
+        ...data,
+        redirect:false,  // Ensure this is set
+      })
         .then(async (callback) => {
           if (callback?.error) {
             toast.error('Invalid credentials');
-          }
-
-          if (callback?.ok && !callback?.error) {
-            await getSession(); 
+          } else {
             toast.success('Logged in successfully!');
-            route.push('/users/dashboard');
+            await getSession(); // Refresh session after login
+            route.push('/users/dashboard'); // Redirect manually after successful login
           }
         })
         .catch((error) => {
-          const errorMessage = error.response?.data?.message || 'Something went wrong during login.';
-          toast.error(errorMessage);
-          console.error('Login error:', error); // Log the full error for debugging
+          console.error('Login error:', error);
         })
+        // .catch((error) => {
+        //   const errorMessage = error.response?.data?.message || 'Something went wrong during login.';
+        //   toast.error(errorMessage);
+        //   console.error('Login error:', error); // Log the full error for debugging
+        // })
         .finally(() => setLoading(false));
     }
 

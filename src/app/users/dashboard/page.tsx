@@ -1,12 +1,10 @@
 import MiddleInformation from '../component/MiddleInformation'
 import Owe from '../Owe/owe'
-// import { getUsers } from '@/app/actions/getUsers';
 import getCurrentUser from '@/app/actions/getCurrentUser';
 
 
 const DashBoard = async () => {
     
-    // const otherUser =await getUsers()
     const currentUser = await getCurrentUser()
     if (!currentUser) {
         throw new Error('Current user is not available.');
