@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Header from '../component/Header/Header';
 import MobileFooter from '@/app/componets/MobileFooter';
 import MobileHeader from '../component/MobileHeader/MobileHeader';
-import { User } from '@/app/type/type';
+import { User } from '@prisma/client';
 interface SideBarProps{
     children:  React.ReactNode
     currentUser:User
@@ -14,7 +14,7 @@ const SideBar:React.FC<SideBarProps> = ({ children ,currentUser}) => {
     return (
         <div>
             <div className='sticky z-10 top-0'>
-                <Header currentUser={currentUser} isOpen={isOpen} handleOpen={()=>setIsOpen(true)} onClose={()=>setIsOpen(false)} />
+                <Header currentUser={currentUser} isOpen={isOpen} handleOpen={()=>setIsOpen(!isOpen)} onClose={()=>setIsOpen(false)} />
                 <MobileHeader />
             </div>
             <main className="h-full w-full">

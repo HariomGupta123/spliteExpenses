@@ -6,16 +6,17 @@ interface UserAvatarProps {
     amount?: string | number | null
     style?:string
     text?:string
+    image?:string
 
 }
-const UserAvatar: React.FC<UserAvatarProps> = ({ usersName, amount ,style,text}) => {
+const UserAvatar: React.FC<UserAvatarProps> = ({ usersName, amount ,style,text,image}) => {
     return (
 
         <div className=" flex justify-start items-center w-full gap-2 ">
 
             <div>
                 <Avatar>
-                    <AvatarImage src={profile.src} alt="/profile" />
+                    <AvatarImage src={image || profile.src} alt="/profile" />
                 </Avatar>
             </div>
             <div className="ml-6">

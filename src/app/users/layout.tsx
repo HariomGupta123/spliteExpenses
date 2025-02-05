@@ -13,11 +13,7 @@ const Userlayout = async ({ children }: { children: React.ReactNode }) => {
     redirect("/"); // Redirect if user is not found
   }
 
-  const current = {
-    id: currentUser.id,
-    name: currentUser.name,
-    email: currentUser.email,
-  };
+ 
   return (
     <div className="h-screen flex flex-col">
       <SideBar currentUser={currentUser}>

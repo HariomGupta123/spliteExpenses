@@ -46,6 +46,7 @@ const sigleFriendDetial=(userId:string)=>{
                             usersName={item.giverUser.name || "Loading..."}
                             amount={item.toGiveAmount || 0}
                             text={"owes you"}
+                            image={item.giverUser.image}
                         />
                     </li>)               
                 )}

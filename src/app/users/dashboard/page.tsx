@@ -15,6 +15,7 @@ const DashBoard = async () => {
         id: currentUser.id,
         name: currentUser.name,
         email: currentUser.email,
+        image:currentUser.image
     };
 
 

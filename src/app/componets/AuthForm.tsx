@@ -88,71 +88,44 @@ const AuthForm = () => {
 
 
   return (
-    <div className='pt-5 sm:mx-auto ms:w-full ms:max-w-md w-[400px]'>
-      <div className='bg-white px-4  py-8 shadow sm:rounded-lg sm:px-10'>
-        <form className='space-y-6' onSubmit={handleSubmit(onSubmit)}>
-          {variant == "REGISTER" && <Input id='name' label='Name' disabled={isLoading} register={register} errors={errors} />
-          }
-          <Input id='email' label='Email' disabled={isLoading} register={register} errors={errors} />
-          <Input id='password' label='Password' disabled={isLoading} register={register} errors={errors} />
-          <Button type={'submit'} disabled={isLoading} >
-
-            {variant == "LOGIN" ? "log in" : "register"}
+    <div className="pt-5 sm:mx-auto w-full max-w-sm sm:max-w-md md:max-w-lg">
+      <div className="bg-white px-4 py-8 shadow-lg rounded-lg sm:px-6 md:px-10">
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          {variant === "REGISTER" && (
+            <Input id="name" label="Name" disabled={isLoading} register={register} errors={errors} />
+          )}
+          <Input id="email" label="Email" disabled={isLoading} register={register} errors={errors} />
+          <Input id="password" label="Password" disabled={isLoading} register={register} errors={errors} />
+          <Button type="submit" disabled={isLoading}>
+            {variant === "LOGIN" ? "Log in" : "Register"}
           </Button>
         </form>
-
       </div>
-      <div className='mt-6'>
-        <div className='relative'>
-          <div
-            className='absolute
-                        inset-0
-                        flex
-                         items-center
-                        '>
-            <div className='w-full
-                            border-t
-                            border-gray-300'/>
-          </div>
-          <div className='
-                        relative 
-                        flex 
-                        justify-center
-                         text-sm'>
-            <span className='
-            bg-white
-             px-2
-            text-gray-500'>
-              Or continue with
-            </span>
-          </div>
 
-
-        </div>
-        <div className='
-                     mt-6 
-                     flex 
-                     gap-2'>
-          <AuthSocialButton
-            icon={BsGithub}
-            onClick={() => ";om"}
-          />
-          <AuthSocialButton
-            icon={BsGoogle}
-            onClick={() => "hari"}
-          />
+      {/* Divider */}
+      <div className="mt-6">
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="bg-white px-2 text-gray-500">Or continue with</span>
+          </div>
         </div>
 
-
+        {/* Social Buttons */}
+        <div className="mt-6 flex flex-col sm:flex-row gap-2 justify-center">
+          <AuthSocialButton icon={BsGithub} onClick={() => ";om"} />
+          <AuthSocialButton icon={BsGoogle} onClick={() => "hari"} />
+        </div>
       </div>
-      <div
-        onClick={toggleVariant}
-        className='
-                  underline 
-                  cursor-pointer'>
-        {variant == 'LOGIN' ? 'Create an account' : 'Login'}
+
+      {/* Toggle Register/Login */}
+      <div onClick={toggleVariant} className="mt-4 text-center text-sm text-gray-600 cursor-pointer underline">
+        {variant === "LOGIN" ? "Create an account" : "Login"}
       </div>
     </div>
+
   )
 }
 

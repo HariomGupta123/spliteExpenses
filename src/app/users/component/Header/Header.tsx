@@ -1,8 +1,8 @@
 import profile from "../../../../../public/cardphoto.jpeg";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import Profile from "@/app/componets/Profile/Profile";
-import { User } from "@/app/type/type";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { User } from "@prisma/client";
 interface HeaderProps{
   isOpen:boolean,
   onClose:()=>void
@@ -14,7 +14,7 @@ const Header:React.FC<HeaderProps> =  ({isOpen,onClose,handleOpen,currentUser}) 
 
   return (
     <>
-   {isOpen && <Profile onClose={onClose}/> }
+   {isOpen && <Profile onClose={onClose} /> }
     <div className="hidden md:flex w-full h-15 bg-red-500 sticky z-10 top-0 font-Poppins text-white">
       <div className="w-full flex">
         {/* First child (Title) */}
@@ -30,7 +30,7 @@ const Header:React.FC<HeaderProps> =  ({isOpen,onClose,handleOpen,currentUser}) 
           <div className="flex row-auto justify-center items-center">
             <span className="mr-2">
               <Avatar>
-                <AvatarImage src={profile.src} alt="profile" />
+                  <AvatarImage src={currentUser?.image ?? undefined} alt="profile" />
               </Avatar>
             </span>
             <span className="font-semibold text-white cursor-pointer" onClick={handleOpen}>

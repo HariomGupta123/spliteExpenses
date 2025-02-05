@@ -6,7 +6,7 @@ import { FaUsers, FaUserFriends, FaUserCircle, FaListAlt } from "react-icons/fa"
 const footerItems = [
     { id: 1, icon: FaUsers, label: "Groups", route: "/groups" },
     { id: 2, icon: FaUserFriends, label: "Friends", route: "/users/friends" },
-    { id: 3, icon: FaUserCircle, label: "Account", route: "/account" },
+    { id: 3, icon: FaUserCircle, label: "Account", route: "/users/account" },
     { id: 4, icon: FaListAlt, label: "Activities", route: "/users/recentActivities" },
 ];
 

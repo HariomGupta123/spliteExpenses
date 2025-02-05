@@ -67,7 +67,7 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
     //all members start
     const [isSpliteOption, setIsSpliteOption] = useState(false)
     const members = watch('members'); // Watching the members field to update UI
-    const router = useRouter();
+    // const router = useRouter();
     const date = new Date()
     const numberOfMembers = members.length;
     const currentUsers = [currentUser]
@@ -193,9 +193,16 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
 
     };
     // console.log("amount", amount)
+    const h=() => {
+            setIsMultiple(true)
+            onClose()
+            members[0]
+        }
+
+   console.log("multiple",isMultiple)
     return (
         <>
-            <Model isOpen={isOpen} onClose={onClose} heading='Add an Expenses' >
+            <Model isOpen={isOpen} onClose={h} heading='Add an Expenses' >
                 <div className=' bg-white rounded-lg '>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="space-y-12">
@@ -261,7 +268,6 @@ const AddExpense: React.FC<AddExpenseProps> = ({ isOpen, onClose, users, current
                             userName={fieldSelectedUsersWithCurrentUser}
                             register={register}
                             currentUser={currentUser}
-                            // selectedMembers={numberOfMembersWithCurrentUser}
                             errors={errors}
                             chooseOnePayer={chooseOnePayer}
                             chooseMultiplePayer={chooseMultiplePayer}

@@ -5,11 +5,7 @@ import Checkbox from '@/app/componets/Input/CheckBox'
 import { Controller, DefaultValues, FieldErrors, FieldValues, SubmitHandler, useForm, UseFormRegister, useWatch } from 'react-hook-form'
 import Input from '@/app/componets/Input/Input'
 import { User } from '@/app/type/type'
-// interface User {
-//     id: string;
-//     name: string;
-//     paid: number;
-// }
+
 
 interface ChoosePayerProps {
     register: UseFormRegister<FieldValues>;
@@ -37,7 +33,6 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ activePayer,setActivePayer,on
     const watchedPeople = useWatch({ control, name: 'people' });
 
     const [people, setAxactAmount] = useState(watchedPeople || []);
-    // const [selectedUserId, setSelectedUserId] = useState<string | null>(currentUser.id); // State to track the selected user
 
 
     useEffect(() => {
@@ -49,7 +44,6 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ activePayer,setActivePayer,on
     const TotalUser:  number = userName.length
     const [multiplePayers, setMultiplePayers] = useState<[]>([])
    const [multiplePayerss,setMultiplePayerss]=useState<[]>([]);
-//    useEffect(()=>{setSelectedUserId(localStorage.getItem("active") ||currentUser.id)},[])
     const handleCheckBox =useCallback( () => {
         const checked = !isChecked;
         setIsChecked(checked);
@@ -104,14 +98,12 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ activePayer,setActivePayer,on
     const prevUpdatedUsersRef = useRef<any>(null);
        useEffect(()=>{
            if (JSON.stringify(prevUpdatedUsersRef.current) !== JSON.stringify(updatedUsers)) {
-            //    setMultiplePayerss(updatedUsers)
                chooseMultiplePayer(activePayer =="" ?(isChecked===false ?(updatedUsers):multiplePayers):"")
                prevUpdatedUsersRef.current = updatedUsers;
            }
         
        },[updatedUsers,chooseMultiplePayer,setMultiplePayers,multiplePayers,multiplePayerss,isChecked,activePayer])
-    // console.log("multiplepayers", multiplePayers);
-    // console.log("multiplepayerss", multiplePayerss);
+   
 
 
     const handleInputChange = useCallback((value: number | string, index: number) => {
@@ -128,8 +120,7 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ activePayer,setActivePayer,on
                         // console.log("alluser", user); // Log each user correctly
                          const comparisionOnActive= activePayer == "you" ? currentUser.id: activePayer
                         const isActive = comparisionOnActive=== user.id  ; // Check if the user is active
-                        // console.log("activePayer",activePayer)
-                        // console.log("active",isActive)
+                        
                         return (
                             <div
                                 key={user.id}
@@ -181,18 +172,7 @@ const ChoosePayer: React.FC<ChoosePayerProps> = ({ activePayer,setActivePayer,on
 
                                         <div key={user.id} className=' flex  cursor-pointer w-full p-1 px-10 rounded-sm'>
 
-                                            {/* <Input
-                                                id={`people.${index}.paid`}
-                                                label={user.name}
-                                                register={register}
-                                                type="number"
-                                                errors={errors}
-                                                disabled={isChecked}
-                                                rupees="Rs"
-                                                style="w-20"
-                                                defaultValue={isChecked ===false? 0 :currentPaid}
-                                                onChange={(event: any) => handleInputChange(event.target.value , index)}
-                                            /> */}
+                                         
                                             <Input
                                                 id={`people.${index}.paid`}
                                                 label={user.name}

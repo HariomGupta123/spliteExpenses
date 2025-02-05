@@ -29,6 +29,7 @@ const YouOwe:React.FC<YouOweProps> = ({outGoing}) => {
                             amount={item.toGiveAmount}
                             style={"text-red-400"}
                             text={"You owe"}
+                            image={item.receiverUser?.image}
                             // Pass `youOwe` here
                         />
                     </li>

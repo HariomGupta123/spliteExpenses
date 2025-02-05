@@ -16,11 +16,13 @@ export interface InvolvePeopleOnKharch {
   name: string;
   toGiveInType?: string; // Optional property
 }
-export interface User{
-  id:string,
-  name:string | null ,
-  email:string,  
+export interface User {
+  id: string;
+  name?: string | null;
+  email: string;
+  image?: string | null; // Allow 'null' here as well
 }
+
 export interface person {
     userId: string;
     userName: string | null | any
