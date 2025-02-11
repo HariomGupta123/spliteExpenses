@@ -90,7 +90,7 @@ const Account = ({ currentUser }: AccountProps) => {
                             width={112}
                             height={112}
                             className="w-full h-full object-cover"
-                            unoptimized
+                            priority
                         />
                     </div>
                     <CldUploadButton
